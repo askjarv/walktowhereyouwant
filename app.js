@@ -31,12 +31,12 @@ async function exchangeCodeForToken(code) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + btoa(config.CLIENT_ID + ':')
+                'Authorization': 'Basic ' + btoa(window.config.CLIENT_ID + ':')
             },
             body: new URLSearchParams({
                 code: code,
                 grant_type: 'authorization_code',
-                redirect_uri: config.REDIRECT_URI
+                redirect_uri: window.config.REDIRECT_URI
             })
         });
 
@@ -103,7 +103,7 @@ function showError(message) {
 // Handle login button click
 loginButton.addEventListener('click', () => {
     const scope = 'activity';
-    const authUrl = `https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${config.CLIENT_ID}&redirect_uri=${encodeURIComponent(config.REDIRECT_URI)}&scope=${scope}`;
+    const authUrl = `https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${window.config.CLIENT_ID}&redirect_uri=${encodeURIComponent(window.config.REDIRECT_URI)}&scope=${scope}`;
     window.location.href = authUrl;
 });
 
