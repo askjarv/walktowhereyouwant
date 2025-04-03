@@ -27,7 +27,7 @@ async function exchangeCodeForToken(code) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + btoa(window.config.CLIENT_ID + ':')
+                'Authorization': 'Basic ' + btoa(window.config.CLIENT_ID + ':' + window.config.CLIENT_SECRET)
             },
             body: new URLSearchParams({
                 code: code,
