@@ -1,0 +1,12 @@
+{
+  "name": "fitbit-steps-tracker",
+  "version": "1.0.0",
+  "description": "A simple web application that displays your daily Fitbit step count",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8000"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+} 
