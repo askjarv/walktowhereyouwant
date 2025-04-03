@@ -1,7 +1,3 @@
-// Fitbit API credentials - You'll need to replace these with your own
-const CLIENT_ID = 'YOUR_CLIENT_ID';
-const REDIRECT_URI = window.location.origin;
-
 // DOM Elements
 const loginButton = document.getElementById('login-button');
 const stepsCount = document.getElementById('steps-count');
