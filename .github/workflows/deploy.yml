@@ -28,17 +28,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Configure app
+      - name: Create config.js
         env:
           FITBIT_CLIENT_ID: ${{ secrets.FITBIT_CLIENT_ID }}
         run: |
-          cat > config.js << 'EOL'
-          // Configuration for the Fitbit API
-          window.config = {
-              CLIENT_ID: '${{ secrets.FITBIT_CLIENT_ID }}',
-              REDIRECT_URI: 'https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}'
-          };
-          EOL
+          echo "// Configuration for the Fitbit API" > config.js
+          echo "window.config = {" >> config.js
+          echo "    CLIENT_ID: '${{ secrets.FITBIT_CLIENT_ID }}'," >> config.js
+          echo "    REDIRECT_URI: 'https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}'" >> config.js
+          echo "};" >> config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
