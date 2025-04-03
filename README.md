@@ -87,4 +87,17 @@ To run the application locally:
 - JavaScript (ES6+)
 - Fitbit Web API
 - GitHub Pages
-- GitHub Actions 
+- GitHub Actions
+
+## Customizing the App Icon
+
+The app includes a PWA icon generator that allows you to customize the app icon:
+
+1. Open `generate-icons.html` in your browser
+2. Enter any emoji you'd like to use as your app icon
+3. Click "Generate Icons" to create your PWA icons
+4. The icons will automatically download
+5. Move the downloaded icons to your project's `icons` directory
+6. The new icons will be used when users install the PWA
+
+Note: Some emojis may not render correctly. If this happens, try a different emoji. 

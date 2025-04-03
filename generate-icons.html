@@ -6,23 +6,104 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             background: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
         }
         canvas {
             margin: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
         }
+        input[type="text"] {
+            font-size: 24px;
+            padding: 10px;
+            width: 100px;
+            text-align: center;
+            margin: 10px 0;
+            border: 2px solid #00b4d8;
+            border-radius: 4px;
+        }
+        button {
+            background: #00b4d8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #0096c7;
+        }
+        .instructions {
+            max-width: 600px;
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
-    <canvas id="icon192" width="192" height="192"></canvas>
-    <canvas id="icon512" width="512" height="512"></canvas>
+    <div class="container">
+        <h1>PWA Icon Generator</h1>
+        <p>Enter an emoji to use as your app icon:</p>
+        <label for="emojiInput" class="sr-only">Emoji Input</label>
+        <input type="text" id="emojiInput" value="👣" maxlength="2" aria-label="Emoji Input" placeholder="Enter emoji">
+        <button onclick="updateIcons()">Generate Icons</button>
+    </div>
+    
+    <div class="preview-container">
+        <canvas id="icon192" width="192" height="192"></canvas>
+        <canvas id="icon512" width="512" height="512"></canvas>
+    </div>
+
+    <div class="instructions">
+        <h2>Instructions</h2>
+        <ol>
+            <li>Enter any emoji in the input field above</li>
+            <li>Click "Generate Icons" to create your PWA icons</li>
+            <li>The icons will automatically download</li>
+            <li>Move the downloaded icons to your project's <code>icons</code> directory</li>
+        </ol>
+        <p>Note: Some emojis may not render correctly. If this happens, try a different emoji.</p>
+    </div>
+
     <script>
+        let currentEmoji = '👣';
+
         function generateIcon(canvasId, size) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
@@ -59,24 +140,43 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillStyle = 'white';
-            ctx.fillText('👣', size/2, size/2);
+            ctx.fillText(currentEmoji, size/2, size/2);
             
             // Reset shadow
             ctx.shadowColor = 'transparent';
             ctx.shadowBlur = 0;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
-            
-            // Convert to PNG and download
-            const link = document.createElement('a');
-            link.download = `icon-${size}x${size}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
         }
 
-        // Generate both sizes
-        generateIcon('icon192', 192);
-        generateIcon('icon512', 512);
+        function updateIcons() {
+            const emojiInput = document.getElementById('emojiInput');
+            currentEmoji = emojiInput.value || '👣';
+            
+            // Generate preview icons
+            generateIcon('icon192', 192);
+            generateIcon('icon512', 512);
+            
+            // Download the icons
+            downloadIcons();
+        }
+
+        function downloadIcons() {
+            // Download 192x192 icon
+            const link192 = document.createElement('a');
+            link192.download = `icon-192x192.png`;
+            link192.href = document.getElementById('icon192').toDataURL('image/png');
+            link192.click();
+            
+            // Download 512x512 icon
+            const link512 = document.createElement('a');
+            link512.download = `icon-512x512.png`;
+            link512.href = document.getElementById('icon512').toDataURL('image/png');
+            link512.click();
+        }
+
+        // Generate initial icons
+        updateIcons();
     </script>
 </body>
 </html> 
