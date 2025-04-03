@@ -2,7 +2,7 @@
     "name": "Fitbit Steps Tracker",
     "short_name": "Steps Tracker",
     "description": "Track your daily Fitbit steps",
-    "start_url": "/",
+    "start_url": "https://askjarv.github.io/walktowhereyouwant/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#00b4d8",
