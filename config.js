@@ -1,4 +1,5 @@
-const config = {
-    CLIENT_ID: process.env.FITBIT_CLIENT_ID || 'YOUR_CLIENT_ID',
-    REDIRECT_URI: window.location.origin
+// This will be replaced during build with actual values
+window.config = {
+    CLIENT_ID: 'YOUR_CLIENT_ID',
+    REDIRECT_URI: window.location.origin + window.location.pathname
 }; 

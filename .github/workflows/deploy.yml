@@ -32,7 +32,7 @@ jobs:
         env:
           FITBIT_CLIENT_ID: ${{ secrets.FITBIT_CLIENT_ID }}
         run: |
-          echo "const config = { CLIENT_ID: '$FITBIT_CLIENT_ID', REDIRECT_URI: 'https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}' };" > config.js
+          echo "window.config = { CLIENT_ID: '$FITBIT_CLIENT_ID', REDIRECT_URI: 'https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}' };" > config.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
