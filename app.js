@@ -31,14 +31,18 @@ async function exchangeCodeForToken(code) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + btoa(CLIENT_ID + ':')
+                'Authorization': 'Basic ' + btoa(config.CLIENT_ID + ':')
             },
             body: new URLSearchParams({
                 code: code,
                 grant_type: 'authorization_code',
-                redirect_uri: REDIRECT_URI
+                redirect_uri: config.REDIRECT_URI
             })
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
         const data = await response.json();
         accessToken = data.access_token;
@@ -52,6 +56,7 @@ async function exchangeCodeForToken(code) {
     } catch (error) {
         console.error('Error exchanging code for token:', error);
         stepsCount.textContent = 'Error';
+        showError('Failed to authenticate with Fitbit. Please try again.');
     }
 }
 
@@ -65,19 +70,40 @@ async function fetchSteps() {
             }
         });
 
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Token expired or invalid
+                localStorage.removeItem('fitbit_access_token');
+                accessToken = null;
+                showError('Your session has expired. Please reconnect with Fitbit.');
+                return;
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         const steps = data['activities-steps'][0].value;
         stepsCount.textContent = steps.toLocaleString();
     } catch (error) {
         console.error('Error fetching steps:', error);
         stepsCount.textContent = 'Error';
+        showError('Failed to fetch steps data. Please try again.');
     }
+}
+
+// Show error message to user
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    document.querySelector('.container').appendChild(errorDiv);
+    setTimeout(() => errorDiv.remove(), 5000);
 }
 
 // Handle login button click
 loginButton.addEventListener('click', () => {
     const scope = 'activity';
-    const authUrl = `https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${scope}`;
+    const authUrl = `https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${config.CLIENT_ID}&redirect_uri=${encodeURIComponent(config.REDIRECT_URI)}&scope=${scope}`;
     window.location.href = authUrl;
 });
 

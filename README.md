@@ -11,20 +11,55 @@ A simple web application that displays your daily Fitbit step count.
    - Fill in the application details:
      - Application Name: "Steps Tracker" (or any name you prefer)
      - OAuth 2.0 Application Type: "Web Application"
-     - Callback URL: "http://localhost:8000" (or your preferred local development URL)
+     - Callback URL: "https://YOUR_USERNAME.github.io/fitbit-steps-tracker" (replace YOUR_USERNAME with your GitHub username)
      - Default Access Type: "Read-Only"
 
-2. After registering your app, you'll receive a Client ID. Replace `YOUR_CLIENT_ID` in the `app.js` file with your actual Client ID.
+2. After registering your app, you'll receive a Client ID. You'll need to add this as a GitHub Secret:
+   - Go to your GitHub repository
+   - Click on "Settings"
+   - Click on "Secrets and variables" → "Actions"
+   - Click "New repository secret"
+   - Name: `FITBIT_CLIENT_ID`
+   - Value: Your Fitbit Client ID
+   - Click "Add secret"
 
-3. To run the application locally, you can use Python's built-in HTTP server:
+3. Enable GitHub Pages:
+   - Go to your repository's "Settings"
+   - Scroll down to "GitHub Pages" section
+   - Under "Source", select "gh-pages" branch
+   - Click "Save"
+
+4. The application will automatically deploy to GitHub Pages when you push to the main branch.
+
+## Local Development
+
+To run the application locally:
+
+1. Clone the repository:
    ```bash
-   python -m http.server 8000
+   git clone https://github.com/YOUR_USERNAME/fitbit-steps-tracker.git
+   cd fitbit-steps-tracker
    ```
-   Or any other local development server of your choice.
 
-4. Open your browser and navigate to `http://localhost:8000`
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-5. Click the "Connect with Fitbit" button to authorize the application
+3. Create a `config.js` file with your Fitbit Client ID:
+   ```javascript
+   const config = {
+       CLIENT_ID: 'YOUR_CLIENT_ID',
+       REDIRECT_URI: 'http://localhost:8000'
+   };
+   ```
+
+4. Start the development server:
+   ```bash
+   npm start
+   ```
+
+5. Open your browser and navigate to `http://localhost:8000`
 
 ## Features
 
@@ -32,10 +67,12 @@ A simple web application that displays your daily Fitbit step count.
 - Mobile-friendly design
 - Simple and clean interface
 - Automatic token management
+- Error handling and user feedback
+- Secure client ID storage using GitHub Secrets
 
 ## Security Notes
 
-- This is a basic implementation for demonstration purposes
+- The Client ID is securely stored as a GitHub Secret
 - In a production environment, you should:
   - Implement proper token refresh logic
   - Add error handling for expired tokens
@@ -48,4 +85,6 @@ A simple web application that displays your daily Fitbit step count.
 - HTML5
 - CSS3
 - JavaScript (ES6+)
-- Fitbit Web API 
+- Fitbit Web API
+- GitHub Pages
+- GitHub Actions 
