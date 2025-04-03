@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fitbit Steps Tracker</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00b4d8">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
 <body>
     <div class="container">
@@ -15,9 +18,30 @@
                 <span class="steps-label">steps</span>
             </div>
         </div>
-        <button id="login-button" class="login-button">Connect with Fitbit</button>
+        <div class="button-container">
+            <button id="login-button" class="login-button" style="display: none;">Connect with Fitbit</button>
+            <button id="import-settings" class="secondary-button">Import Settings</button>
+        </div>
+        <div class="history-container">
+            <h2>Step History</h2>
+            <div id="steps-history" class="steps-history"></div>
+        </div>
     </div>
     <script src="config.js"></script>
     <script src="app.js"></script>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html> 
