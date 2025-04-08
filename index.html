@@ -3,90 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitbit Steps Tracker</title>
+    <title>Walk To Where You Want</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00b4d8">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     <!-- Add Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="menu">
-        <h1 id="theme-name">Loading theme...</h1>
-        <div class="button-container">
-            <button id="login-button">Login with Fitbit</button>
-            <button id="theme-settings-button" class="settings-button">
-                <span class="settings-icon">⚙️</span>
-                Theme Settings
-            </button>
+    <div id="steps-container" class="glass-effect">
+        <h1>Your Steps Today</h1>
+        <div id="steps-count">0</div>
+        <div id="milestone-container" class="glass-effect">
+            <!-- Milestone content will be dynamically inserted here -->
         </div>
     </div>
 
-    <div id="theme-settings-modal" class="modal">
-        <div class="modal-content">
-            <h2>Theme Settings</h2>
-            <div class="theme-options">
-                <button class="theme-button" data-theme="nature">Nature Explorer</button>
-                <button class="theme-button" data-theme="space">Space Explorer</button>
-                <button class="theme-button" data-theme="ocean">Ocean Voyager</button>
-                <div class="custom-theme">
-                    <label for="custom-theme-file">Custom Theme:</label>
-                    <input type="file" id="custom-theme-file" accept=".json">
-                </div>
-            </div>
-            <button class="close-modal">Close</button>
+    <div id="steps-history" class="glass-effect">
+        <h2>Step History</h2>
+        <div id="history-content">
+            <!-- History items will be dynamically inserted here -->
         </div>
     </div>
 
+    <!-- Date Filter Modal -->
     <div id="date-filter-modal" class="modal">
-        <div class="modal-content">
-            <h2>Set Start Date</h2>
-            <div class="date-filter-options">
-                <div class="date-input-container">
+        <div class="modal-content glass-effect">
+            <div class="modal-header">
+                <h2>Set Start Date</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
                     <label for="start-date">Start Date:</label>
                     <input type="date" id="start-date">
                 </div>
-                <div class="date-buttons">
+                <div class="button-group">
                     <button id="apply-date-filter" class="primary-button">Apply</button>
-                    <button id="reset-date-filter" class="secondary-button">Reset to All Time</button>
+                    <button id="reset-date-filter" class="secondary-button">Reset</button>
                 </div>
             </div>
-            <button class="close-modal">Close</button>
         </div>
     </div>
 
-    <div class="steps-summary">
-        <div class="today-steps">
-            <h2>Today's Steps: <span id="steps-count">0</span></h2>
-        </div>
-        <div class="total-steps">
-            <h2>Total Steps: <span id="total-steps-count">0</span></h2>
-            <div class="date-filter">
-                <span>Since: <span id="start-date-display">All time</span></span>
-                <button id="date-filter-button" class="date-filter-button">
-                    <span class="calendar-icon">📅</span>
-                    Change
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="milestone-container" class="milestone-container" style="display: none;">
-        <img class="milestone-image" src="" alt="Milestone achievement">
-        <p class="milestone-text"></p>
-    </div>
-
-    <div class="container">
-        <div class="history-container">
-            <h2>Step History</h2>
-            <div id="steps-history" class="steps-history"></div>
-        </div>
-        <div class="button-container">
-            <button id="clear-history" class="danger-button">Clear History</button>
-        </div>
-    </div>
-    <script src="config.js"></script>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="theme-manager.js"></script>
+    <script type="module" src="steps-tracker.js"></script>
+    <script type="module" src="welcome-modal.js"></script>
+    <script type="module" src="settings-modal.js"></script>
     <script type="module" src="app.js"></script>
     <script>
         // Register service worker for PWA

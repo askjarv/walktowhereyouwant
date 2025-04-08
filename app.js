@@ -1,5 +1,7 @@
 import ThemeManager from './theme-manager.js';
 import StepsTracker from './steps-tracker.js';
+import WelcomeModal from './welcome-modal.js';
+import SettingsModal from './settings-modal.js';
 
 // DOM Elements
 const loginButton = document.getElementById('login-button');
@@ -14,6 +16,8 @@ class FitbitApp {
     constructor() {
         this.themeManager = new ThemeManager();
         this.stepsTracker = new StepsTracker();
+        this.welcomeModal = new WelcomeModal();
+        this.settingsModal = new SettingsModal();
         this.accessToken = localStorage.getItem('fitbit_access_token');
         this.initializeUI();
         this.initializeEventListeners();
@@ -28,23 +32,23 @@ class FitbitApp {
         this.applyDateFilterButton = document.getElementById('apply-date-filter');
         this.resetDateFilterButton = document.getElementById('reset-date-filter');
         this.clearHistoryButton = document.getElementById('clear-history');
-        this.loginButton = document.getElementById('login-button');
         this.stepsCount = document.getElementById('steps-count');
         
         // Set today's date as max date for the date picker
         const today = new Date();
         const formattedToday = today.toISOString().split('T')[0];
-        this.startDateInput.max = formattedToday;
-
-        // Show/hide login button based on authentication status
-        this.loginButton.style.display = this.accessToken ? 'none' : 'block';
+        if (this.startDateInput) {
+            this.startDateInput.max = formattedToday;
+        }
     }
 
     initializeEventListeners() {
         // Date filter modal
-        this.dateFilterButton.addEventListener('click', () => {
-            this.dateFilterModal.style.display = 'block';
-        });
+        if (this.dateFilterButton) {
+            this.dateFilterButton.addEventListener('click', () => {
+                this.dateFilterModal.style.display = 'block';
+            });
+        }
 
         // Close modal when clicking outside
         window.addEventListener('click', (event) => {
@@ -62,31 +66,32 @@ class FitbitApp {
         });
 
         // Apply date filter
-        this.applyDateFilterButton.addEventListener('click', () => {
-            const selectedDate = this.startDateInput.value;
-            if (selectedDate) {
-                this.stepsTracker.setStartDate(new Date(selectedDate));
-                this.dateFilterModal.style.display = 'none';
-            }
-        });
+        if (this.applyDateFilterButton) {
+            this.applyDateFilterButton.addEventListener('click', () => {
+                const selectedDate = this.startDateInput.value;
+                if (selectedDate) {
+                    this.stepsTracker.setStartDate(new Date(selectedDate));
+                    this.dateFilterModal.style.display = 'none';
+                }
+            });
+        }
 
         // Reset date filter
-        this.resetDateFilterButton.addEventListener('click', () => {
-            this.stepsTracker.resetStartDate();
-            this.dateFilterModal.style.display = 'none';
-        });
+        if (this.resetDateFilterButton) {
+            this.resetDateFilterButton.addEventListener('click', () => {
+                this.stepsTracker.resetStartDate();
+                this.dateFilterModal.style.display = 'none';
+            });
+        }
 
         // Clear history
-        this.clearHistoryButton.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all step history? This cannot be undone.')) {
-                this.stepsTracker.clearHistory();
-            }
-        });
-
-        // Login button
-        this.loginButton.addEventListener('click', () => {
-            this.redirectToFitbitAuth();
-        });
+        if (this.clearHistoryButton) {
+            this.clearHistoryButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all step history? This cannot be undone.')) {
+                    this.stepsTracker.clearHistory();
+                }
+            });
+        }
     }
 
     async initialize() {
@@ -100,7 +105,6 @@ class FitbitApp {
                 localStorage.setItem('fitbit_access_token', accessToken);
                 // Remove the hash from the URL
                 window.history.replaceState({}, document.title, window.location.pathname);
-                this.loginButton.style.display = 'none';
             }
         }
 
@@ -116,8 +120,11 @@ class FitbitApp {
                 // Token might be expired, clear it
                 localStorage.removeItem('fitbit_access_token');
                 this.accessToken = null;
-                this.loginButton.style.display = 'block';
+                this.welcomeModal.show();
             }
+        } else {
+            // Show welcome modal if not authenticated
+            this.welcomeModal.show();
         }
     }
 
@@ -155,8 +162,7 @@ class FitbitApp {
                     console.error('Token expired or invalid (401)');
                     localStorage.removeItem('fitbit_access_token');
                     this.accessToken = null;
-                    this.loginButton.style.display = 'block';
-                    this.showError('Your session has expired. Please reconnect with Fitbit.');
+                    this.welcomeModal.show();
                     return;
                 }
                 
@@ -165,10 +171,9 @@ class FitbitApp {
                 console.error(`HTTP error! status: ${response.status}, response: ${errorText}`);
                 
                 if (response.status === 400) {
-                    this.showError('Bad request to Fitbit API. Please try logging in again.');
+                    this.welcomeModal.show();
                     localStorage.removeItem('fitbit_access_token');
                     this.accessToken = null;
-                    this.loginButton.style.display = 'block';
                     return;
                 }
                 
@@ -192,8 +197,10 @@ class FitbitApp {
             this.checkMilestones(steps);
         } catch (error) {
             console.error('Error fetching today\'s steps:', error);
-            this.stepsCount.textContent = 'Error';
-            this.showError('Failed to fetch steps data. Please try again later.');
+            if (this.stepsCount) {
+                this.stepsCount.textContent = 'Error';
+            }
+            this.welcomeModal.show();
         }
     }
 
@@ -240,10 +247,10 @@ class FitbitApp {
         const milestone = this.themeManager.getMilestoneForSteps(steps);
         const milestoneContainer = document.getElementById('milestone-container');
         
-        if (milestone) {
+        if (milestone && milestoneContainer) {
             this.themeManager.applyMilestoneStyles(milestoneContainer, milestone);
             milestoneContainer.style.display = 'block';
-        } else {
+        } else if (milestoneContainer) {
             milestoneContainer.style.display = 'none';
         }
     }
@@ -258,8 +265,10 @@ class FitbitApp {
     }
 }
 
-// Initialize the app
+// Create and export the app instance
 const app = new FitbitApp();
+window.app = app;  // Make app accessible globally for the welcome modal
+export default app;
 
 // Initialize the app
 function init() {

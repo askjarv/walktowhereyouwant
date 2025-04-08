@@ -2,30 +2,21 @@ class ThemeManager {
     constructor() {
         this.currentTheme = null;
         this.defaultTheme = {
-            name: "Default Theme",
-            globalTheme: {
-                backgroundColor: "#ffffff",
-                menuColor: "#000000",
-                menuBackground: "#f0f0f0",
-                textColor: "#000000",
-                fontFamily: "Arial, sans-serif"
-            }
+            backgroundColor: '#e8f5e9',
+            menuColor: '#2e7d32',
+            menuBackground: '#c8e6c9',
+            textColor: '#1b5e20',
+            fontFamily: "'Open Sans', sans-serif"
         };
-        this.initializeThemeSettings();
         this.loadSavedTheme();
+        this.initializeThemeSettings();
     }
 
     loadSavedTheme() {
         const savedThemeName = localStorage.getItem('currentTheme');
         if (savedThemeName) {
-            // Try to load the saved theme
-            this.loadTheme(`themes/${savedThemeName}-theme.json`)
-                .catch(() => {
-                    console.warn(`Failed to load saved theme: ${savedThemeName}`);
-                    this.loadTheme('themes/nature-theme.json');
-                });
+            this.loadTheme(`themes/${savedThemeName}-theme.json`);
         } else {
-            // Load default theme if no saved theme
             this.loadTheme('themes/nature-theme.json');
         }
     }
@@ -35,178 +26,131 @@ class ThemeManager {
     }
 
     initializeThemeSettings() {
-        const modal = document.getElementById('theme-settings-modal');
-        const settingsButton = document.getElementById('theme-settings-button');
-        const closeButton = document.querySelector('.close-modal');
-        const themeButtons = document.querySelectorAll('.theme-button');
-        const customThemeFile = document.getElementById('custom-theme-file');
+        // Wait for the settings modal to be created
+        const checkForModal = setInterval(() => {
+            const themeButtons = document.getElementById('theme-buttons');
+            const themeFile = document.getElementById('theme-file');
+            
+            if (themeButtons && themeFile) {
+                clearInterval(checkForModal);
+                
+                // Add theme buttons
+                const themes = ['nature', 'space', 'ocean'];
+                themes.forEach(theme => {
+                    const button = document.createElement('button');
+                    button.className = 'theme-button primary-button';
+                    button.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+                    button.addEventListener('click', () => {
+                        this.loadTheme(`themes/${theme}-theme.json`);
+                        this.saveThemeToStorage(theme);
+                    });
+                    themeButtons.appendChild(button);
+                });
 
-        // Open modal
-        settingsButton.addEventListener('click', () => {
-            modal.style.display = 'block';
-        });
-
-        // Close modal
-        closeButton.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
+                // Add custom theme upload handler
+                themeFile.addEventListener('change', (event) => {
+                    this.loadThemeFromFile(event.target.files[0]);
+                });
             }
-        });
-
-        // Handle theme button clicks
-        themeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const themeName = button.dataset.theme;
-                this.loadTheme(`themes/${themeName}-theme.json`);
-                this.saveThemeToStorage(themeName);
-                modal.style.display = 'none';
-            });
-        });
-
-        // Handle custom theme file upload
-        customThemeFile.addEventListener('change', async (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                try {
-                    const theme = await this.loadThemeFromFile(file);
-                    this.currentTheme = theme;
-                    this.applyTheme();
-                    // Save custom theme to localStorage
-                    localStorage.setItem('customTheme', JSON.stringify(theme));
-                    localStorage.setItem('currentTheme', 'custom');
-                    modal.style.display = 'none';
-                } catch (error) {
-                    console.error('Error loading custom theme:', error);
-                    alert('Error loading theme file. Please make sure it follows the correct format.');
-                }
-            }
-        });
-
-        // Check if we have a custom theme saved
-        const savedCustomTheme = localStorage.getItem('customTheme');
-        if (savedCustomTheme && localStorage.getItem('currentTheme') === 'custom') {
-            try {
-                const theme = JSON.parse(savedCustomTheme);
-                this.validateTheme(theme);
-                this.currentTheme = theme;
-                this.applyTheme();
-            } catch (error) {
-                console.error('Error loading saved custom theme:', error);
-                this.loadTheme('themes/nature-theme.json');
-            }
-        }
+        }, 100);
     }
 
     async loadThemeFromFile(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const theme = JSON.parse(event.target.result);
-                    this.validateTheme(theme);
-                    resolve(theme);
-                } catch (error) {
-                    reject(error);
-                }
-            };
-            reader.onerror = () => reject(new Error('Error reading file'));
-            reader.readAsText(file);
-        });
+        try {
+            const text = await file.text();
+            const theme = JSON.parse(text);
+            if (this.validateTheme(theme)) {
+                this.currentTheme = theme;
+                this.applyTheme();
+                this.saveThemeToStorage('custom');
+            }
+        } catch (error) {
+            console.error('Error loading theme file:', error);
+        }
     }
 
-    async loadTheme(themeUrl) {
+    async loadTheme(url) {
         try {
-            const response = await fetch(themeUrl);
-            if (!response.ok) {
-                throw new Error(`Failed to load theme: ${response.statusText}`);
-            }
+            const response = await fetch(url);
             const theme = await response.json();
-            this.validateTheme(theme);
-            this.currentTheme = theme;
-            this.applyTheme();
-            return true;
+            if (this.validateTheme(theme)) {
+                this.currentTheme = theme;
+                this.applyTheme();
+            }
         } catch (error) {
             console.error('Error loading theme:', error);
+            // Fallback to default theme
             this.currentTheme = this.defaultTheme;
             this.applyTheme();
-            return false;
         }
     }
 
     validateTheme(theme) {
-        // Basic validation - in a production environment, you'd want to use a proper JSON Schema validator
-        if (!theme.name || !theme.globalTheme) {
-            throw new Error('Invalid theme format: missing required properties');
+        const requiredProps = ['name', 'globalTheme', 'milestones'];
+        const requiredGlobalProps = ['backgroundColor', 'menuColor', 'menuBackground'];
+        
+        if (!requiredProps.every(prop => prop in theme)) {
+            console.error('Theme missing required properties');
+            return false;
         }
-        if (!theme.globalTheme.backgroundColor || 
-            !theme.globalTheme.menuColor || 
-            !theme.globalTheme.menuBackground) {
-            throw new Error('Invalid theme format: missing required theme properties');
+        
+        if (!requiredGlobalProps.every(prop => prop in theme.globalTheme)) {
+            console.error('Theme missing required global properties');
+            return false;
         }
+        
+        if (!Array.isArray(theme.milestones)) {
+            console.error('Theme milestones must be an array');
+            return false;
+        }
+        
+        return true;
     }
 
     applyTheme() {
-        const theme = this.currentTheme;
         const root = document.documentElement;
-
+        const theme = this.currentTheme.globalTheme;
+        
         // Apply global theme settings
-        root.style.setProperty('--background-color', theme.globalTheme.backgroundColor);
-        root.style.setProperty('--menu-color', theme.globalTheme.menuColor);
-        root.style.setProperty('--menu-background', theme.globalTheme.menuBackground);
-        
-        if (theme.globalTheme.textColor) {
-            root.style.setProperty('--text-color', theme.globalTheme.textColor);
-        }
-        
-        if (theme.globalTheme.fontFamily) {
-            root.style.setProperty('--font-family', theme.globalTheme.fontFamily);
-        }
-
-        // Update theme name in the UI if there's an element for it
-        const themeNameElement = document.getElementById('theme-name');
-        if (themeNameElement) {
-            themeNameElement.textContent = theme.name;
-        }
+        root.style.setProperty('--background-color', theme.backgroundColor);
+        root.style.setProperty('--menu-color', theme.menuColor);
+        root.style.setProperty('--menu-background', theme.menuBackground);
+        root.style.setProperty('--text-color', theme.textColor || '#000000');
+        root.style.setProperty('--font-family', theme.fontFamily || "'Open Sans', sans-serif");
     }
 
     getMilestoneForSteps(steps) {
-        if (!this.currentTheme || !this.currentTheme.milestones) {
-            return null;
-        }
-
+        if (!this.currentTheme || !this.currentTheme.milestones) return null;
+        
         // Sort milestones by steps in descending order
         const sortedMilestones = [...this.currentTheme.milestones].sort((a, b) => b.steps - a.steps);
         
-        // Find the first milestone that the user has reached
+        // Find the first milestone where steps are greater than or equal to the threshold
         return sortedMilestones.find(milestone => steps >= milestone.steps) || null;
     }
 
-    applyMilestoneStyles(milestoneElement, milestone) {
-        if (!milestone) return;
-
-        if (milestone.backgroundColor) {
-            milestoneElement.style.backgroundColor = milestone.backgroundColor;
-        }
+    applyMilestoneStyles(container, milestone) {
+        if (!container || !milestone) return;
         
-        if (milestone.imageUrl) {
-            const imgElement = milestoneElement.querySelector('img');
-            if (imgElement) {
-                imgElement.src = milestone.imageUrl;
-                imgElement.alt = milestone.text;
-            }
-        }
-
-        const textElement = milestoneElement.querySelector('.milestone-text');
-        if (textElement && milestone.text) {
-            textElement.textContent = milestone.text;
+        // Clear previous content
+        container.innerHTML = '';
+        
+        // Create and append milestone content
+        const img = document.createElement('img');
+        img.src = milestone.imageUrl;
+        img.alt = milestone.text;
+        
+        const text = document.createElement('p');
+        text.textContent = milestone.text;
+        
+        container.appendChild(img);
+        container.appendChild(text);
+        
+        // Apply milestone-specific background color if provided
+        if (milestone.backgroundColor) {
+            container.style.backgroundColor = milestone.backgroundColor;
         }
     }
 }
 
-// Export the ThemeManager class
 export default ThemeManager; 

@@ -4,15 +4,28 @@
     --menu-background: #f0f0f0;
     --text-color: #000000;
     --font-family: Arial, sans-serif;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --glass-blur: blur(8px);
 }
 
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: var(--font-family);
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    font-family: var(--font-family, 'Open Sans', sans-serif);
+    background-color: var(--background-color, #e8f5e9);
+    color: var(--text-color, #1b5e20);
+    transition: background-color 0.3s ease;
+}
+
+.glass-effect {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
 }
 
 .menu {
@@ -238,90 +251,193 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 1000;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
-    position: relative;
-    background-color: var(--menu-background);
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: var(--glass-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 90%;
+    width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-.theme-options {
+.modal-header {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.theme-button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    background-color: var(--menu-color);
-    color: var(--menu-background);
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.theme-button:hover {
-    transform: scale(1.05);
-}
-
-.custom-theme {
-    margin-top: 20px;
-    padding: 15px;
-    border: 2px dashed var(--menu-color);
-    border-radius: 8px;
-    text-align: center;
-}
-
-.settings-button {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
-    background-color: var(--menu-color);
-    color: var(--menu-background);
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.settings-button:hover {
-    transform: rotate(30deg);
-}
-
-.settings-icon {
-    font-size: 1.2em;
+    margin-bottom: 1.5rem;
 }
 
 .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     background: none;
     border: none;
-    font-size: 1.5em;
+    font-size: 1.5rem;
     cursor: pointer;
-    color: var(--menu-color);
+    color: var(--text-color);
+    padding: 0.5rem;
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
+.fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--menu-color, #2e7d32);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    z-index: 100;
+}
+
+.fab:hover {
+    transform: scale(1.1);
+}
+
+.primary-button {
+    background: var(--menu-color, #2e7d32);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.secondary-button {
+    background: var(--menu-background, #c8e6c9);
+    color: var(--menu-color, #2e7d32);
+    border: 1px solid var(--menu-color, #2e7d32);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.danger-button {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #c62828;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.danger-button:hover {
+    transform: translateY(-2px);
+}
+
+.settings-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: var(--glass-bg);
+}
+
+.theme-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.upload-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--menu-background, #c8e6c9);
+    color: var(--menu-color, #2e7d32);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.upload-button:hover {
+    transform: translateY(-2px);
+}
+
+#steps-container {
+    padding: 2rem;
+    text-align: center;
+}
+
+#steps-count {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+#milestone-container {
+    margin: 2rem auto;
+    max-width: 600px;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: none;
+}
+
+#milestone-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+#steps-history {
+    margin: 2rem auto;
+    max-width: 600px;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 0.5rem;
+    background: var(--glass-bg);
+}
+
+.no-history-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
     .modal-content {
-        margin: 10% auto;
-        width: 90%;
+        width: 95%;
+        padding: 1rem;
     }
-    
-    .theme-button {
-        width: 100%;
+
+    .fab {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    #steps-count {
+        font-size: 2rem;
     }
 }
 
