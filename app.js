@@ -141,8 +141,11 @@ class FitbitApp {
         document.querySelectorAll('.minimize-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const widget = e.target.closest('.widget');
-                widget.classList.toggle('minimized');
-                e.target.textContent = widget.classList.contains('minimized') ? '+' : '−';
+                if (widget) {
+                    widget.classList.toggle('minimized');
+                    e.target.textContent = widget.classList.contains('minimized') ? '+' : '−';
+                    console.log('Widget minimized:', widget.classList.contains('minimized'));
+                }
             });
         });
 
