@@ -124,11 +124,13 @@ class FitbitApp {
     redirectToFitbitAuth() {
         const clientId = window.config.CLIENT_ID;
         const redirectUri = encodeURIComponent(window.config.REDIRECT_URI);
-        const scope = 'activity';
-        const responseType = 'token';  // Changed from 'code' to 'token' for implicit flow
+        // Update scopes to include all necessary permissions
+        const scope = 'activity profile heartrate sleep';
+        const responseType = 'token';  // Using token for implicit flow
         
         const authUrl = `https://www.fitbit.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
         
+        console.log('Redirecting to Fitbit auth URL:', authUrl);
         window.location.href = authUrl;
     }
 
@@ -136,6 +138,8 @@ class FitbitApp {
         if (!this.accessToken) return;
 
         try {
+            console.log('Fetching today\'s steps with token:', this.accessToken.substring(0, 10) + '...');
+            
             const response = await fetch('https://api.fitbit.com/1/user/-/activities/date/today.json', {
                 headers: {
                     'Authorization': `Bearer ${this.accessToken}`
@@ -145,16 +149,32 @@ class FitbitApp {
             if (!response.ok) {
                 if (response.status === 401) {
                     // Token expired or invalid
+                    console.error('Token expired or invalid (401)');
                     localStorage.removeItem('fitbit_access_token');
                     this.accessToken = null;
                     this.loginButton.style.display = 'block';
                     this.showError('Your session has expired. Please reconnect with Fitbit.');
                     return;
                 }
+                
+                // Log more details about the error
+                const errorText = await response.text();
+                console.error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+                
+                if (response.status === 400) {
+                    this.showError('Bad request to Fitbit API. Please try logging in again.');
+                    localStorage.removeItem('fitbit_access_token');
+                    this.accessToken = null;
+                    this.loginButton.style.display = 'block';
+                    return;
+                }
+                
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
+            console.log('Steps data received:', data);
+            
             const steps = data.summary.steps;
             
             // Update today's steps display
@@ -167,11 +187,10 @@ class FitbitApp {
             
             // Check for milestones
             this.checkMilestones(steps);
-            
-            return steps;
         } catch (error) {
-            console.error('Error fetching steps:', error);
-            throw error;
+            console.error('Error fetching today\'s steps:', error);
+            this.stepsCount.textContent = 'Error';
+            this.showError('Failed to fetch steps data. Please try again later.');
         }
     }
 
