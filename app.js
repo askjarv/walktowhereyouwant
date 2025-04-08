@@ -140,7 +140,10 @@ class FitbitApp {
         try {
             console.log('Fetching today\'s steps with token:', this.accessToken.substring(0, 10) + '...');
             
-            const response = await fetch('https://api.fitbit.com/1/user/-/activities/date/today.json', {
+            // Format today's date as YYYY-MM-DD
+            const today = new Date().toISOString().split('T')[0];
+            
+            const response = await fetch(`https://api.fitbit.com/1/user/-/activities/date/${today}.json`, {
                 headers: {
                     'Authorization': `Bearer ${this.accessToken}`
                 }
