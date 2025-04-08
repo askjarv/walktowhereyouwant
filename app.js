@@ -17,18 +17,7 @@ class FitbitApp {
         this.accessToken = localStorage.getItem('fitbit_access_token');
         this.initializeUI();
         this.initializeEventListeners();
-        
-        // Check if we're returning from Fitbit authorization
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        
-        if (code) {
-            // Exchange the authorization code for an access token
-            this.exchangeCodeForToken(code);
-        } else if (this.accessToken) {
-            // If we have a token, fetch the steps
-            this.initialize();
-        }
+        this.initialize();
     }
 
     initializeUI() {
@@ -101,6 +90,20 @@ class FitbitApp {
     }
 
     async initialize() {
+        // Check URL hash for access token (Implicit Grant Flow)
+        const hash = window.location.hash;
+        if (hash) {
+            const params = new URLSearchParams(hash.substring(1));
+            const accessToken = params.get('access_token');
+            if (accessToken) {
+                this.accessToken = accessToken;
+                localStorage.setItem('fitbit_access_token', accessToken);
+                // Remove the hash from the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                this.loginButton.style.display = 'none';
+            }
+        }
+
         // Check if we have a token
         if (this.accessToken) {
             try {
@@ -122,49 +125,11 @@ class FitbitApp {
         const clientId = window.config.CLIENT_ID;
         const redirectUri = encodeURIComponent(window.config.REDIRECT_URI);
         const scope = 'activity';
-        const responseType = 'code';
+        const responseType = 'token';  // Changed from 'code' to 'token' for implicit flow
         
         const authUrl = `https://www.fitbit.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
         
         window.location.href = authUrl;
-    }
-
-    async exchangeCodeForToken(code) {
-        try {
-            const response = await fetch('https://api.fitbit.com/oauth2/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa(window.config.CLIENT_ID + ':' + window.config.CLIENT_SECRET)
-                },
-                body: new URLSearchParams({
-                    code: code,
-                    grant_type: 'authorization_code',
-                    redirect_uri: window.config.REDIRECT_URI
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            this.accessToken = data.access_token;
-            localStorage.setItem('fitbit_access_token', this.accessToken);
-            
-            // Remove the code from the URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-            
-            // Hide login button
-            this.loginButton.style.display = 'none';
-            
-            // Initialize the app
-            await this.initialize();
-        } catch (error) {
-            console.error('Error exchanging code for token:', error);
-            this.stepsCount.textContent = 'Error';
-            this.showError('Failed to authenticate with Fitbit. Please try again.');
-        }
     }
 
     async fetchTodaySteps() {
