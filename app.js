@@ -54,6 +54,12 @@ class FitbitApp {
     }
 
     initializeEventListeners() {
+        // Login button
+        const loginButton = document.getElementById('login-button');
+        if (loginButton) {
+            loginButton.addEventListener('click', () => this.redirectToFitbitAuth());
+        }
+
         // Date filter modal
         if (this.dateFilterButton) {
             this.dateFilterButton.addEventListener('click', () => {
@@ -120,9 +126,8 @@ class FitbitApp {
     redirectToFitbitAuth() {
         const clientId = window.config.CLIENT_ID;
         const redirectUri = encodeURIComponent(window.config.REDIRECT_URI);
-        // Update scopes to include all necessary permissions
         const scope = 'activity profile heartrate sleep';
-        const responseType = 'token';  // Using token for implicit flow
+        const responseType = 'token';
         
         const authUrl = `https://www.fitbit.com/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
         
