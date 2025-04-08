@@ -17,6 +17,18 @@ class FitbitApp {
         this.accessToken = localStorage.getItem('fitbit_access_token');
         this.initializeUI();
         this.initializeEventListeners();
+        
+        // Check if we're returning from Fitbit authorization
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        if (code) {
+            // Exchange the authorization code for an access token
+            this.exchangeCodeForToken(code);
+        } else if (this.accessToken) {
+            // If we have a token, fetch the steps
+            this.initialize();
+        }
     }
 
     initializeUI() {
@@ -27,11 +39,16 @@ class FitbitApp {
         this.applyDateFilterButton = document.getElementById('apply-date-filter');
         this.resetDateFilterButton = document.getElementById('reset-date-filter');
         this.clearHistoryButton = document.getElementById('clear-history');
+        this.loginButton = document.getElementById('login-button');
+        this.stepsCount = document.getElementById('steps-count');
         
         // Set today's date as max date for the date picker
         const today = new Date();
         const formattedToday = today.toISOString().split('T')[0];
         this.startDateInput.max = formattedToday;
+
+        // Show/hide login button based on authentication status
+        this.loginButton.style.display = this.accessToken ? 'none' : 'block';
     }
 
     initializeEventListeners() {
@@ -78,8 +95,7 @@ class FitbitApp {
         });
 
         // Login button
-        const loginButton = document.getElementById('login-button');
-        loginButton.addEventListener('click', () => {
+        this.loginButton.addEventListener('click', () => {
             this.redirectToFitbitAuth();
         });
     }
@@ -88,13 +104,16 @@ class FitbitApp {
         // Check if we have a token
         if (this.accessToken) {
             try {
-                // Verify token is still valid
+                // Verify token is still valid and fetch today's steps
                 await this.fetchTodaySteps();
+                // Fetch step history
+                await this.fetchStepsHistory();
             } catch (error) {
                 console.error('Error verifying token:', error);
                 // Token might be expired, clear it
                 localStorage.removeItem('fitbit_access_token');
                 this.accessToken = null;
+                this.loginButton.style.display = 'block';
             }
         }
     }
@@ -110,6 +129,44 @@ class FitbitApp {
         window.location.href = authUrl;
     }
 
+    async exchangeCodeForToken(code) {
+        try {
+            const response = await fetch('https://api.fitbit.com/oauth2/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + btoa(window.config.CLIENT_ID + ':' + window.config.CLIENT_SECRET)
+                },
+                body: new URLSearchParams({
+                    code: code,
+                    grant_type: 'authorization_code',
+                    redirect_uri: window.config.REDIRECT_URI
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            this.accessToken = data.access_token;
+            localStorage.setItem('fitbit_access_token', this.accessToken);
+            
+            // Remove the code from the URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            // Hide login button
+            this.loginButton.style.display = 'none';
+            
+            // Initialize the app
+            await this.initialize();
+        } catch (error) {
+            console.error('Error exchanging code for token:', error);
+            this.stepsCount.textContent = 'Error';
+            this.showError('Failed to authenticate with Fitbit. Please try again.');
+        }
+    }
+
     async fetchTodaySteps() {
         if (!this.accessToken) return;
 
@@ -121,6 +178,14 @@ class FitbitApp {
             });
 
             if (!response.ok) {
+                if (response.status === 401) {
+                    // Token expired or invalid
+                    localStorage.removeItem('fitbit_access_token');
+                    this.accessToken = null;
+                    this.loginButton.style.display = 'block';
+                    this.showError('Your session has expired. Please reconnect with Fitbit.');
+                    return;
+                }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
@@ -128,9 +193,8 @@ class FitbitApp {
             const steps = data.summary.steps;
             
             // Update today's steps display
-            const stepsCountElement = document.getElementById('steps-count');
-            if (stepsCountElement) {
-                stepsCountElement.textContent = steps.toLocaleString();
+            if (this.stepsCount) {
+                this.stepsCount.textContent = steps.toLocaleString();
             }
             
             // Add to steps tracker
@@ -196,11 +260,19 @@ class FitbitApp {
             milestoneContainer.style.display = 'none';
         }
     }
+
+    showError(message, type = 'error') {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.backgroundColor = type === 'success' ? '#4CAF50' : '#ff4444';
+        errorDiv.textContent = message;
+        document.querySelector('.container').appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
 }
 
 // Initialize the app
 const app = new FitbitApp();
-app.initialize();
 
 // Initialize the app
 function init() {
