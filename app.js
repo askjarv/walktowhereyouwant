@@ -119,9 +119,22 @@ class FitbitApp {
         
         if (accessToken) {
             localStorage.setItem('fitbit_access_token', accessToken);
-            // Remove the hash from the URL
-            window.location.hash = '';
+            window.location.hash = ''; // Clear the hash
             this.updateConnectionStatus(true);
+            this.welcomeModal.hide();
+        }
+
+        // Check for existing token
+        const token = localStorage.getItem('fitbit_access_token');
+        console.log('Token found:', !!token);
+        
+        if (token) {
+            this.updateConnectionStatus(true);
+            this.fetchTodaySteps();
+            this.fetchStepsHistory();
+        } else {
+            this.updateConnectionStatus(false);
+            this.welcomeModal.show();
         }
 
         // Initialize minimize buttons
@@ -132,19 +145,6 @@ class FitbitApp {
                 e.target.textContent = widget.classList.contains('minimized') ? '+' : '−';
             });
         });
-
-        // Check if we have a token
-        const token = localStorage.getItem('fitbit_access_token');
-        console.log('Token found:', !!token);
-        
-        if (token) {
-            this.updateConnectionStatus(true);
-            this.fetchTodaySteps();
-            this.fetchStepsHistory();
-        } else {
-            this.updateConnectionStatus(false);
-            console.log('No token found');
-        }
 
         // Initialize step gauge
         this.initializeStepGauge();

@@ -12,40 +12,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="steps-container" class="widget glass-effect">
-        <div class="widget-header">
-            <h2>Your Steps Today</h2>
-            <button class="minimize-btn">&minus;</button>
-        </div>
-        <div class="widget-content">
-            <div id="step-gauge-container"></div>
-        </div>
-    </div>
-
-    <div id="milestone-container" class="widget glass-effect">
-        <div class="widget-header">
-            <h2>Achievements</h2>
-            <button class="minimize-btn">&minus;</button>
-        </div>
-        <div class="widget-content">
-            <div class="milestone-slider">
-                <button class="nav-btn prev-btn">&lt;</button>
-                <div class="milestone-track">
-                    <!-- Milestone content will be dynamically inserted here -->
-                </div>
-                <button class="nav-btn next-btn">&gt;</button>
+    <div class="container">
+        <div id="steps-container" class="widget glass-effect">
+            <div class="widget-header">
+                <h2>Your Steps Today</h2>
+                <button class="minimize-btn">&minus;</button>
+            </div>
+            <div class="widget-content">
+                <div id="step-gauge-container"></div>
             </div>
         </div>
-    </div>
 
-    <div id="steps-history" class="widget glass-effect">
-        <div class="widget-header">
-            <h2>Step History</h2>
-            <button class="minimize-btn">&minus;</button>
+        <div id="milestone-container" class="widget glass-effect">
+            <div class="widget-header">
+                <h2>Achievements</h2>
+                <button class="minimize-btn">&minus;</button>
+            </div>
+            <div class="widget-content">
+                <div class="milestone-slider">
+                    <button class="nav-btn prev-btn">&lt;</button>
+                    <div class="milestone-track">
+                        <!-- Milestone content will be dynamically inserted here -->
+                    </div>
+                    <button class="nav-btn next-btn">&gt;</button>
+                </div>
+            </div>
         </div>
-        <div class="widget-content">
-            <div id="history-content">
-                <!-- History items will be dynamically inserted here -->
+
+        <div id="steps-history" class="widget glass-effect">
+            <div class="widget-header">
+                <h2>Step History</h2>
+                <button class="minimize-btn">&minus;</button>
+            </div>
+            <div class="widget-content">
+                <div id="history-content">
+                    <!-- History items will be dynamically inserted here -->
+                </div>
             </div>
         </div>
     </div>
