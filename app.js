@@ -138,19 +138,35 @@ class FitbitApp {
         }
 
         // Initialize minimize buttons
-        document.querySelectorAll('.minimize-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const widget = e.target.closest('.widget');
-                if (widget) {
-                    widget.classList.toggle('minimized');
-                    e.target.textContent = widget.classList.contains('minimized') ? '+' : '−';
-                    console.log('Widget minimized:', widget.classList.contains('minimized'));
-                }
-            });
-        });
+        this.initializeMinimizeButtons();
 
         // Initialize step gauge
         this.initializeStepGauge();
+    }
+
+    initializeMinimizeButtons() {
+        const minimizeButtons = document.querySelectorAll('.minimize-btn');
+        console.log('Found minimize buttons:', minimizeButtons.length);
+        
+        minimizeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                console.log('Minimize button clicked');
+                const widget = e.target.closest('.widget');
+                console.log('Found widget:', widget);
+                
+                if (widget) {
+                    const isMinimized = widget.classList.contains('minimized');
+                    console.log('Current minimized state:', isMinimized);
+                    
+                    widget.classList.toggle('minimized');
+                    
+                    const newState = widget.classList.contains('minimized');
+                    console.log('New minimized state:', newState);
+                    
+                    e.target.textContent = newState ? '+' : '−';
+                }
+            });
+        });
     }
 
     initializeStepGauge() {

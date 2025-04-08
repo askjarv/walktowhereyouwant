@@ -906,7 +906,8 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: max-height 0.3s ease;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 
 .milestone-slider {
@@ -1109,11 +1110,13 @@ input[type="file"] {
 /* Widget minimize functionality */
 .widget.minimized .widget-content {
     display: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
 }
 
 .widget.minimized {
     max-height: 60px !important;
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 /* Custom scrollbar for history */
