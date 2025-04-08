@@ -9,9 +9,19 @@ class ThemeManager {
             fontFamily: 'Arial, sans-serif'
         };
         this.loadSavedTheme();
-        this.initializeWidgets();
-        this.initializeThemeSettings();
-        this.initializeThemeInstructions();
+        
+        // Wait for DOM content to be loaded before initializing UI elements
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.initializeWidgets();
+                this.initializeThemeSettings();
+                this.initializeThemeInstructions();
+            });
+        } else {
+            this.initializeWidgets();
+            this.initializeThemeSettings();
+            this.initializeThemeInstructions();
+        }
     }
 
     loadSavedTheme() {
