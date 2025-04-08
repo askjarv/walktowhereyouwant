@@ -8,20 +8,22 @@ class ThemeManager {
             textColor: '#333333',
             fontFamily: 'Arial, sans-serif'
         };
+        
+        // Load saved theme first
         this.loadSavedTheme();
         
-        // Wait for DOM content to be loaded before initializing UI elements
+        // Initialize UI elements after DOM is loaded
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.initializeWidgets();
-                this.initializeThemeSettings();
-                this.initializeThemeInstructions();
-            });
+            document.addEventListener('DOMContentLoaded', () => this.initialize());
         } else {
-            this.initializeWidgets();
-            this.initializeThemeSettings();
-            this.initializeThemeInstructions();
+            this.initialize();
         }
+    }
+
+    initialize() {
+        this.initializeWidgets();
+        this.initializeThemeSettings();
+        this.initializeThemeInstructions();
     }
 
     loadSavedTheme() {
@@ -84,105 +86,87 @@ class ThemeManager {
     }
 
     initializeThemeSettings() {
-        const settingsBtn = document.getElementById('theme-settings-btn');
-        const instructionsBtn = document.getElementById('theme-instructions-btn');
-        const settingsModal = document.getElementById('theme-settings-modal');
-        const instructionsModal = document.getElementById('theme-instructions');
-        const closeButtons = document.querySelectorAll('.close');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
         const downloadTemplateBtn = document.getElementById('download-template');
+        const themeFile = document.getElementById('theme-file');
+        const themeButtons = document.getElementById('theme-buttons');
 
-        // Theme settings modal
-        settingsBtn.addEventListener('click', () => {
-            settingsModal.style.display = 'block';
-        });
+        if (!settingsModal || !themeButtons || !themeFile) {
+            console.warn('Some theme elements not found in the DOM');
+            return;
+        }
 
-        // Theme instructions modal
-        instructionsBtn.addEventListener('click', () => {
-            instructionsModal.style.display = 'block';
-        });
-
-        // Close modals
+        // Close modal
         closeButtons.forEach(button => {
             button.addEventListener('click', () => {
                 settingsModal.style.display = 'none';
-                instructionsModal.style.display = 'none';
             });
         });
 
         // Download template
-        downloadTemplateBtn.addEventListener('click', () => {
-            const template = {
-                name: "My Custom Theme",
-                globalTheme: {
-                    backgroundColor: "#ffffff",
-                    menuColor: "#4CAF50",
-                    menuBackground: "#45a049",
-                    textColor: "#333333",
-                    fontFamily: "Arial, sans-serif"
-                },
-                milestones: [
-                    {
-                        steps: 1000,
-                        imageUrl: "https://example.com/image1.jpg",
-                        text: "First milestone reached!",
-                        backgroundColor: "#f0f0f0"
+        if (downloadTemplateBtn) {
+            downloadTemplateBtn.addEventListener('click', () => {
+                const template = {
+                    name: "My Custom Theme",
+                    globalTheme: {
+                        backgroundColor: "#ffffff",
+                        menuColor: "#4CAF50",
+                        menuBackground: "#45a049",
+                        textColor: "#333333",
+                        fontFamily: "Arial, sans-serif"
                     },
-                    {
-                        steps: 5000,
-                        imageUrl: "https://example.com/image2.jpg",
-                        text: "Half way there!"
-                    }
-                ]
-            };
+                    milestones: [
+                        {
+                            steps: 1000,
+                            imageUrl: "https://example.com/image1.jpg",
+                            text: "First milestone reached!",
+                            backgroundColor: "#f0f0f0"
+                        },
+                        {
+                            steps: 5000,
+                            imageUrl: "https://example.com/image2.jpg",
+                            text: "Half way there!"
+                        }
+                    ]
+                };
 
-            const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'theme-template.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
+                const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'theme-template.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
 
-        // Close modals when clicking outside
+        // Close modal when clicking outside
         window.addEventListener('click', (event) => {
             if (event.target === settingsModal) {
                 settingsModal.style.display = 'none';
             }
-            if (event.target === instructionsModal) {
-                instructionsModal.style.display = 'none';
-            }
         });
 
-        // Wait for the settings modal to be created
-        const checkForModal = setInterval(() => {
-            const themeButtons = document.getElementById('theme-buttons');
-            const themeFile = document.getElementById('theme-file');
-            
-            if (themeButtons && themeFile) {
-                clearInterval(checkForModal);
-                
-                // Add theme buttons
-                const themes = ['nature', 'space', 'ocean'];
-                themes.forEach(theme => {
-                    const button = document.createElement('button');
-                    button.className = 'theme-button primary-button';
-                    button.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-                    button.addEventListener('click', () => {
-                        this.loadTheme(`themes/${theme}-theme.json`);
-                        this.saveThemeToStorage(theme);
-                    });
-                    themeButtons.appendChild(button);
-                });
+        // Add theme buttons
+        const themes = ['nature', 'space', 'ocean'];
+        themes.forEach(theme => {
+            const button = document.createElement('button');
+            button.className = 'theme-button primary-button';
+            button.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+            button.addEventListener('click', () => {
+                this.loadTheme(`themes/${theme}-theme.json`);
+                this.saveThemeToStorage(theme);
+            });
+            themeButtons.appendChild(button);
+        });
 
-                // Add custom theme upload handler
-                themeFile.addEventListener('change', (event) => {
-                    this.loadThemeFromFile(event.target.files[0]);
-                });
-            }
-        }, 100);
+        // Add custom theme upload handler
+        themeFile.addEventListener('change', (event) => {
+            this.loadThemeFromFile(event.target.files[0]);
+        });
     }
 
     async loadThemeFromFile(file) {
