@@ -19,6 +19,12 @@
     <div id="milestone-container" class="glass-effect">
         <!-- Milestone content will be dynamically inserted here -->
     </div>
+
+    <div id="theme-settings" class="theme-settings">
+        <button id="theme-settings-btn">Theme Settings</button>
+        <button id="theme-instructions-btn">Theme Instructions</button>
+    </div>
+
     <div id="steps-history" class="glass-effect">
         <h2>Step History</h2>
         <div id="history-content">
@@ -46,14 +52,32 @@
         </div>
     </div>
 
-    <div class="theme-settings">
-        <button id="theme-settings-btn">Theme Settings</button>
-        <button id="theme-instructions-btn">Theme Instructions</button>
-    </div>
-
     <!-- Theme Settings Modal -->
-    <div id="theme-settings" class="modal">
-        // ... existing code ...
+    <div id="theme-settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Theme Settings</h2>
+            <div class="theme-options">
+                <div class="theme-option">
+                    <h3>Nature Theme</h3>
+                    <button class="theme-btn" data-theme="nature">Apply</button>
+                </div>
+                <div class="theme-option">
+                    <h3>Ocean Theme</h3>
+                    <button class="theme-btn" data-theme="ocean">Apply</button>
+                </div>
+                <div class="theme-option">
+                    <h3>Space Theme</h3>
+                    <button class="theme-btn" data-theme="space">Apply</button>
+                </div>
+                <div class="theme-option">
+                    <h3>Custom Theme</h3>
+                    <label for="custom-theme-file">Upload theme file (JSON)</label>
+                    <input type="file" id="custom-theme-file" accept=".json" title="Upload a custom theme JSON file">
+                    <button id="upload-theme">Upload</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Theme Instructions Modal -->

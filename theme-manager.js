@@ -29,7 +29,7 @@ class ThemeManager {
     initializeThemeSettings() {
         const settingsBtn = document.getElementById('theme-settings-btn');
         const instructionsBtn = document.getElementById('theme-instructions-btn');
-        const settingsModal = document.getElementById('theme-settings');
+        const settingsModal = document.getElementById('theme-settings-modal');
         const instructionsModal = document.getElementById('theme-instructions');
         const closeButtons = document.querySelectorAll('.close');
         const downloadTemplateBtn = document.getElementById('download-template');
