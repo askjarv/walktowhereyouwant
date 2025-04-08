@@ -320,7 +320,7 @@ function displayStepHistory() {
     `).join('');
 }
 
-// Format date for display
+// Helper function to format dates
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -328,53 +328,6 @@ function formatDate(dateString) {
         month: 'short', 
         day: 'numeric' 
     });
-}
-
-// Handle settings import
-importSettingsButton.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.cfg';
-    
-    input.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            try {
-                const text = await file.text();
-                const settings = parseConfigFile(text);
-                
-                // Save settings to localStorage
-                Object.entries(settings).forEach(([key, value]) => {
-                    localStorage.setItem(key, value);
-                });
-                
-                showError('Settings imported successfully!', 'success');
-                
-                // Refresh the page to apply new settings
-                window.location.reload();
-            } catch (error) {
-                console.error('Error importing settings:', error);
-                showError('Failed to import settings. Please check the file format.');
-            }
-        }
-    };
-    
-    input.click();
-});
-
-// Parse config file
-function parseConfigFile(text) {
-    const settings = {};
-    const lines = text.split('\n');
-    
-    lines.forEach(line => {
-        const [key, value] = line.split('=').map(s => s.trim());
-        if (key && value) {
-            settings[key] = value;
-        }
-    });
-    
-    return settings;
 }
 
 // Show error message to user
