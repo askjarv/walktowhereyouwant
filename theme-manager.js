@@ -150,18 +150,20 @@ class ThemeManager {
             }
         });
 
-        // Add theme buttons
-        const themes = ['nature', 'space', 'ocean'];
-        themes.forEach(theme => {
-            const button = document.createElement('button');
-            button.className = 'theme-button primary-button';
-            button.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-            button.addEventListener('click', () => {
-                this.loadTheme(`themes/${theme}-theme.json`);
-                this.saveThemeToStorage(theme);
+        // Add theme buttons only if they don't exist
+        if (themeButtons.children.length === 0) {
+            const themes = ['nature', 'space', 'ocean'];
+            themes.forEach(theme => {
+                const button = document.createElement('button');
+                button.className = 'theme-button primary-button';
+                button.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+                button.addEventListener('click', () => {
+                    this.loadTheme(`themes/${theme}-theme.json`);
+                    this.saveThemeToStorage(theme);
+                });
+                themeButtons.appendChild(button);
             });
-            themeButtons.appendChild(button);
-        });
+        }
 
         // Add custom theme upload handler
         themeFile.addEventListener('change', (event) => {
