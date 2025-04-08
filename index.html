@@ -8,27 +8,86 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00b4d8">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <!-- Add Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Today's Steps</h1>
-        <div class="steps-container">
-            <div class="steps-circle">
-                <span id="steps-count">--</span>
-                <span class="steps-label">steps</span>
+    <div class="menu">
+        <h1 id="theme-name">Loading theme...</h1>
+        <div class="button-container">
+            <button id="login-button">Login with Fitbit</button>
+            <button id="theme-settings-button" class="settings-button">
+                <span class="settings-icon">⚙️</span>
+                Theme Settings
+            </button>
+        </div>
+    </div>
+
+    <div id="theme-settings-modal" class="modal">
+        <div class="modal-content">
+            <h2>Theme Settings</h2>
+            <div class="theme-options">
+                <button class="theme-button" data-theme="nature">Nature Explorer</button>
+                <button class="theme-button" data-theme="space">Space Explorer</button>
+                <button class="theme-button" data-theme="ocean">Ocean Voyager</button>
+                <div class="custom-theme">
+                    <label for="custom-theme-file">Custom Theme:</label>
+                    <input type="file" id="custom-theme-file" accept=".json">
+                </div>
+            </div>
+            <button class="close-modal">Close</button>
+        </div>
+    </div>
+
+    <div id="date-filter-modal" class="modal">
+        <div class="modal-content">
+            <h2>Set Start Date</h2>
+            <div class="date-filter-options">
+                <div class="date-input-container">
+                    <label for="start-date">Start Date:</label>
+                    <input type="date" id="start-date">
+                </div>
+                <div class="date-buttons">
+                    <button id="apply-date-filter" class="primary-button">Apply</button>
+                    <button id="reset-date-filter" class="secondary-button">Reset to All Time</button>
+                </div>
+            </div>
+            <button class="close-modal">Close</button>
+        </div>
+    </div>
+
+    <div class="steps-summary">
+        <div class="today-steps">
+            <h2>Today's Steps: <span id="steps-count">0</span></h2>
+        </div>
+        <div class="total-steps">
+            <h2>Total Steps: <span id="total-steps-count">0</span></h2>
+            <div class="date-filter">
+                <span>Since: <span id="start-date-display">All time</span></span>
+                <button id="date-filter-button" class="date-filter-button">
+                    <span class="calendar-icon">📅</span>
+                    Change
+                </button>
             </div>
         </div>
-        <div class="button-container">
-            <button id="login-button" class="login-button" style="display: none;">Connect with Fitbit</button>
-            <button id="import-settings" class="secondary-button">Import Settings</button>
-        </div>
+    </div>
+
+    <div id="milestone-container" class="milestone-container" style="display: none;">
+        <img class="milestone-image" src="" alt="Milestone achievement">
+        <p class="milestone-text"></p>
+    </div>
+
+    <div class="container">
         <div class="history-container">
             <h2>Step History</h2>
             <div id="steps-history" class="steps-history"></div>
         </div>
+        <div class="button-container">
+            <button id="clear-history" class="danger-button">Clear History</button>
+        </div>
     </div>
     <script src="config.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
     <script>
         // Register service worker for PWA
         if ('serviceWorker' in navigator) {

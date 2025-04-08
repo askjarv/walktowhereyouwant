@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Fitbit Steps Tracker Theme",
+  "description": "Theme configuration for the Fitbit Steps Tracker app",
+  "type": "object",
+  "required": ["name", "globalTheme"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the theme"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the theme"
+    },
+    "globalTheme": {
+      "type": "object",
+      "description": "Global theming preferences",
+      "required": ["backgroundColor", "menuColor", "menuBackground"],
+      "properties": {
+        "backgroundColor": {
+          "type": "string",
+          "description": "Background color of the page (CSS color value)",
+          "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\)$|^rgba\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*[0-1]?\\d*\\.?\\d+\\s*\\)$"
+        },
+        "menuColor": {
+          "type": "string",
+          "description": "Color of menu text and buttons (CSS color value)",
+          "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\)$|^rgba\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*[0-1]?\\d*\\.?\\d+\\s*\\)$"
+        },
+        "menuBackground": {
+          "type": "string",
+          "description": "Background color of menu elements (CSS color value)",
+          "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\)$|^rgba\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*[0-1]?\\d*\\.?\\d+\\s*\\)$"
+        },
+        "textColor": {
+          "type": "string",
+          "description": "Color of text (CSS color value)",
+          "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\)$|^rgba\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*[0-1]?\\d*\\.?\\d+\\s*\\)$"
+        },
+        "fontFamily": {
+          "type": "string",
+          "description": "Font family for the app"
+        }
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "description": "List of step milestones with associated images and text",
+      "items": {
+        "type": "object",
+        "required": ["steps", "imageUrl", "text"],
+        "properties": {
+          "steps": {
+            "type": "integer",
+            "description": "Number of steps required to reach this milestone",
+            "minimum": 0
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "URL of the image to display when this milestone is reached",
+            "format": "uri"
+          },
+          "text": {
+            "type": "string",
+            "description": "Text to display when this milestone is reached"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "description": "Background color for this milestone (CSS color value)",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*\\)$|^rgba\\(\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*\\d+\\s*,\\s*[0-1]?\\d*\\.?\\d+\\s*\\)$"
+          }
+        }
+      }
+    }
+  }
+} 

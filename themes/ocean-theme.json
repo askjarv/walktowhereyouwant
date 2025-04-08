@@ -1,0 +1,37 @@
+{
+  "name": "Ocean Voyager",
+  "description": "A marine-themed step tracker with milestones based on ocean depths",
+  "globalTheme": {
+    "backgroundColor": "#e6f3ff",
+    "menuColor": "#0066cc",
+    "menuBackground": "#cce6ff",
+    "textColor": "#003366",
+    "fontFamily": "'Quicksand', sans-serif"
+  },
+  "milestones": [
+    {
+      "steps": 1000,
+      "imageUrl": "https://example.com/images/shallow-reef.jpg",
+      "text": "You've explored the shallow reef!",
+      "backgroundColor": "#b3d9ff"
+    },
+    {
+      "steps": 5000,
+      "imageUrl": "https://example.com/images/coral-forest.jpg",
+      "text": "You've discovered a coral forest!",
+      "backgroundColor": "#99ccff"
+    },
+    {
+      "steps": 10000,
+      "imageUrl": "https://example.com/images/deep-trench.jpg",
+      "text": "You've reached the deep ocean trench!",
+      "backgroundColor": "#80bfff"
+    },
+    {
+      "steps": 20000,
+      "imageUrl": "https://example.com/images/abyssal-plain.jpg",
+      "text": "You've reached the abyssal plain!",
+      "backgroundColor": "#66b3ff"
+    }
+  ]
+} 

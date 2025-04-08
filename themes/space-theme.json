@@ -1,0 +1,37 @@
+{
+  "name": "Space Explorer",
+  "description": "A cosmic-themed step tracker with milestones based on space exploration",
+  "globalTheme": {
+    "backgroundColor": "#0a0a2a",
+    "menuColor": "#00ff9f",
+    "menuBackground": "#1a1a3a",
+    "textColor": "#ffffff",
+    "fontFamily": "'Orbitron', sans-serif"
+  },
+  "milestones": [
+    {
+      "steps": 1000,
+      "imageUrl": "https://example.com/images/earth-orbit.jpg",
+      "text": "You've orbited Earth!",
+      "backgroundColor": "#1a1a3a"
+    },
+    {
+      "steps": 5000,
+      "imageUrl": "https://example.com/images/moon-landing.jpg",
+      "text": "You've reached the Moon!",
+      "backgroundColor": "#2a2a4a"
+    },
+    {
+      "steps": 10000,
+      "imageUrl": "https://example.com/images/mars-surface.jpg",
+      "text": "You've landed on Mars!",
+      "backgroundColor": "#3a3a5a"
+    },
+    {
+      "steps": 20000,
+      "imageUrl": "https://example.com/images/outer-space.jpg",
+      "text": "You've ventured into deep space!",
+      "backgroundColor": "#4a4a6a"
+    }
+  ]
+} 
