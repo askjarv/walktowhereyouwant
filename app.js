@@ -112,14 +112,31 @@ class FitbitApp {
     }
 
     initialize() {
+        // Check URL hash for access token (Implicit Grant Flow)
+        const hash = window.location.hash;
+        if (hash) {
+            const params = new URLSearchParams(hash.substring(1));
+            const accessToken = params.get('access_token');
+            if (accessToken) {
+                this.accessToken = accessToken;
+                localStorage.setItem('fitbit_access_token', accessToken);
+                // Remove the hash from the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
         this.initializeUI();
         this.initializeEventListeners();
         this.initializeSettings();
         this.updateConnectionStatus(!!this.accessToken);
         
         if (this.accessToken) {
+            console.log('Token found, fetching data...');
             this.fetchTodaySteps();
             this.fetchStepsHistory();
+        } else {
+            console.log('No token found, showing welcome modal');
+            this.welcomeModal.show();
         }
     }
 
@@ -136,15 +153,14 @@ class FitbitApp {
     }
 
     async fetchTodaySteps() {
-        if (!this.accessToken) return;
+        if (!this.accessToken) {
+            console.log('No access token available');
+            return;
+        }
 
         try {
-            console.log('Fetching today\'s steps with token:', this.accessToken.substring(0, 10) + '...');
-            
-            // Format today's date as YYYY-MM-DD
-            const today = new Date().toISOString().split('T')[0];
-            
-            const response = await fetch(`https://api.fitbit.com/1/user/-/activities/date/${today}.json`, {
+            console.log('Fetching today\'s steps...');
+            const response = await fetch('https://api.fitbit.com/1/user/-/activities/steps/date/today/1d.json', {
                 headers: {
                     'Authorization': `Bearer ${this.accessToken}`
                 }
@@ -152,32 +168,21 @@ class FitbitApp {
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    // Token expired or invalid
-                    console.error('Token expired or invalid (401)');
+                    console.error('Token expired or invalid');
                     localStorage.removeItem('fitbit_access_token');
                     this.accessToken = null;
+                    this.updateConnectionStatus(false);
                     this.welcomeModal.show();
                     return;
                 }
-                
-                // Log more details about the error
-                const errorText = await response.text();
-                console.error(`HTTP error! status: ${response.status}, response: ${errorText}`);
-                
-                if (response.status === 400) {
-                    this.welcomeModal.show();
-                    localStorage.removeItem('fitbit_access_token');
-                    this.accessToken = null;
-                    return;
-                }
-                
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
             console.log('Steps data received:', data);
             
-            const steps = data.summary.steps;
+            const steps = data['activities-steps'][0].value;
+            console.log('Today\'s steps:', steps);
             
             // Update step gauge
             this.stepGauge.update(steps, this.dailyGoal);
@@ -196,9 +201,13 @@ class FitbitApp {
     }
 
     async fetchStepsHistory() {
-        if (!this.accessToken) return;
+        if (!this.accessToken) {
+            console.log('No access token available for history');
+            return;
+        }
 
         try {
+            console.log('Fetching steps history...');
             // Get steps for the last 30 days
             const endDate = new Date();
             const startDate = new Date();
@@ -214,10 +223,19 @@ class FitbitApp {
             });
 
             if (!response.ok) {
+                if (response.status === 401) {
+                    console.error('Token expired or invalid');
+                    localStorage.removeItem('fitbit_access_token');
+                    this.accessToken = null;
+                    this.updateConnectionStatus(false);
+                    this.welcomeModal.show();
+                    return;
+                }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
+            console.log('History data received:', data);
             
             // Process each day's data
             data['activities-steps'].forEach(day => {
