@@ -135,8 +135,7 @@ class FitbitApp {
             this.fetchTodaySteps();
             this.fetchStepsHistory();
         } else {
-            console.log('No token found, showing welcome modal');
-            this.welcomeModal.show();
+            console.log('No token found');
         }
     }
 

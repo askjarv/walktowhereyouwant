@@ -2,6 +2,12 @@ class WelcomeModal {
     constructor() {
         this.modal = null;
         this.initialize();
+        
+        // Only show the modal if there's no access token
+        const accessToken = localStorage.getItem('fitbit_access_token');
+        if (!accessToken) {
+            this.show();
+        }
     }
 
     initialize() {
