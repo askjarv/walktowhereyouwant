@@ -34,13 +34,13 @@ jobs:
       - name: Create config.js
         env:
           FITBIT_CLIENT_ID: ${{ secrets.FITBIT_CLIENT_ID }}
-          FITBIT_CLIENT_SECRET: ${{ secrets.FITBIT_CLIENT_SECRET }}
         run: |
-          echo "// Configuration for the Fitbit API" > config.js
+          echo "// Fitbit API Configuration" > config.js
           echo "window.config = {" >> config.js
+          echo "    // Client ID loaded from GitHub Secrets" >> config.js
           echo "    CLIENT_ID: '${{ secrets.FITBIT_CLIENT_ID }}'," >> config.js
-          echo "    CLIENT_SECRET: '${{ secrets.FITBIT_CLIENT_SECRET }}'," >> config.js
-          echo "    REDIRECT_URI: 'https://askjarv.github.io/walktowhereyouwant/'" >> config.js
+          echo "    // The redirect URI must match exactly what you registered in your Fitbit app settings" >> config.js
+          echo "    REDIRECT_URI: 'https://askjarv.github.io/walktowhereyouwant/callback.html'" >> config.js
           echo "};" >> config.js
 
       - name: Setup Pages

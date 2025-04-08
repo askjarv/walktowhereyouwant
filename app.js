@@ -119,8 +119,8 @@ class FitbitApp {
     }
 
     redirectToFitbitAuth() {
-        const clientId = '23R9QX';
-        const redirectUri = encodeURIComponent('https://chrisbrownie.github.io/walkToWhereYouWant/callback.html');
+        const clientId = window.config.CLIENT_ID;
+        const redirectUri = encodeURIComponent(window.config.REDIRECT_URI);
         const scope = 'activity';
         const responseType = 'code';
         
