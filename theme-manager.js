@@ -222,15 +222,32 @@ class ThemeManager {
     }
 
     applyTheme() {
+        if (!this.currentTheme) return;
+
         const root = document.documentElement;
-        const theme = this.currentTheme.globalTheme;
+        const { globalTheme } = this.currentTheme;
+
+        // Convert hex to RGB for glass effect
+        const menuBackgroundRGB = this.hexToRGB(globalTheme.menuBackground);
+
+        // Apply theme colors
+        root.style.setProperty('--menu-background', globalTheme.menuBackground);
+        root.style.setProperty('--menu-background-rgb', `${menuBackgroundRGB.r}, ${menuBackgroundRGB.g}, ${menuBackgroundRGB.b}`);
+        root.style.setProperty('--menu-color', globalTheme.menuColor);
+        root.style.setProperty('--text-color', globalTheme.textColor || '#333333');
+        root.style.setProperty('--font-family', globalTheme.fontFamily || 'Arial, sans-serif');
+    }
+
+    hexToRGB(hex) {
+        // Remove the hash if it exists
+        hex = hex.replace('#', '');
         
-        // Apply global theme settings
-        root.style.setProperty('--background-color', theme.backgroundColor);
-        root.style.setProperty('--menu-color', theme.menuColor);
-        root.style.setProperty('--menu-background', theme.menuBackground);
-        root.style.setProperty('--text-color', theme.textColor || '#000000');
-        root.style.setProperty('--font-family', theme.fontFamily || "'Open Sans', sans-serif");
+        // Parse the hex values
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        
+        return { r, g, b };
     }
 
     getMilestoneForSteps(steps) {
