@@ -379,6 +379,8 @@ h2 {
 #steps-container {
     padding: 2rem;
     text-align: center;
+    max-width: 800px;
+    margin: 2rem auto;
 }
 
 #steps-count {
@@ -585,4 +587,17 @@ h2 {
     .date-filter {
         flex-direction: column;
     }
+}
+
+#step-gauge-container {
+    width: 300px;
+    height: 300px;
+    margin: 2rem auto;
+    position: relative;
+}
+
+#step-gauge-container canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
 } 

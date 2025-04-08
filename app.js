@@ -2,6 +2,7 @@ import ThemeManager from './theme-manager.js';
 import StepsTracker from './steps-tracker.js';
 import WelcomeModal from './welcome-modal.js';
 import SettingsModal from './settings-modal.js';
+import StepGauge from './step-gauge.js';
 
 // DOM Elements
 const loginButton = document.getElementById('login-button');
@@ -18,7 +19,9 @@ class FitbitApp {
         this.stepsTracker = new StepsTracker();
         this.welcomeModal = new WelcomeModal();
         this.settingsModal = new SettingsModal();
+        this.stepGauge = new StepGauge('step-gauge-container');
         this.accessToken = localStorage.getItem('fitbit_access_token');
+        this.dailyGoal = 10000; // Default daily goal
         this.initializeUI();
         this.initializeEventListeners();
         this.initialize();
@@ -185,21 +188,18 @@ class FitbitApp {
             
             const steps = data.summary.steps;
             
-            // Update today's steps display
-            if (this.stepsCount) {
-                this.stepsCount.textContent = steps.toLocaleString();
-            }
+            // Update step gauge
+            this.stepGauge.update(steps, this.dailyGoal);
             
             // Add to steps tracker
             this.stepsTracker.addStepsEntry(new Date(), steps);
             
-            // Check for milestones
-            this.checkMilestones(steps);
+            // Check for milestones using total steps
+            const totalSteps = this.stepsTracker.totalSteps;
+            this.checkMilestones(totalSteps);
         } catch (error) {
             console.error('Error fetching today\'s steps:', error);
-            if (this.stepsCount) {
-                this.stepsCount.textContent = 'Error';
-            }
+            this.stepGauge.update(0, this.dailyGoal);
             this.welcomeModal.show();
         }
     }
