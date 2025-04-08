@@ -1,37 +1,31 @@
 {
-  "name": "Nature Explorer",
+  "name": "My Custom Theme",
   "description": "A nature-themed step tracker with milestones based on hiking distances",
   "globalTheme": {
-    "backgroundColor": "#f0f8ff",
-    "menuColor": "#2e7d32",
-    "menuBackground": "#e8f5e9",
-    "textColor": "#1b5e20",
-    "fontFamily": "'Roboto', sans-serif"
+    "backgroundColor": "#f5f5f5",
+    "menuColor": "#4a90e2",
+    "menuBackground": "#ffffff",
+    "textColor": "#333333",
+    "fontFamily": "Arial, sans-serif"
   },
   "milestones": [
     {
       "steps": 1000,
-      "imageUrl": "https://example.com/images/forest-path.jpg",
-      "text": "You've walked through a small forest path!",
-      "backgroundColor": "#c8e6c9"
+      "imageUrl": "https://example.com/images/1000-steps.jpg",
+      "text": "First milestone reached!",
+      "backgroundColor": "#e8f4fd"
     },
     {
       "steps": 5000,
-      "imageUrl": "https://example.com/images/mountain-view.jpg",
-      "text": "You've reached a beautiful mountain viewpoint!",
-      "backgroundColor": "#a5d6a7"
+      "imageUrl": "https://example.com/images/5000-steps.jpg",
+      "text": "Half way there!",
+      "backgroundColor": "#d4e9fc"
     },
     {
       "steps": 10000,
-      "imageUrl": "https://example.com/images/waterfall.jpg",
-      "text": "You've discovered a hidden waterfall!",
-      "backgroundColor": "#81c784"
-    },
-    {
-      "steps": 20000,
-      "imageUrl": "https://example.com/images/summit.jpg",
-      "text": "You've reached the summit! Amazing achievement!",
-      "backgroundColor": "#66bb6a"
+      "imageUrl": "https://example.com/images/10000-steps.jpg",
+      "text": "Daily goal achieved!",
+      "backgroundColor": "#c0defb"
     }
   ]
 } 

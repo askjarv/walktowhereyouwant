@@ -6,7 +6,8 @@
     "menuColor": "#0066cc",
     "menuBackground": "#cce6ff",
     "textColor": "#003366",
-    "fontFamily": "'Quicksand', sans-serif"
+    "fontFamily": "'Quicksand', sans-serif",
+    "dailystepgoal": 10000
   },
   "milestones": [
     {

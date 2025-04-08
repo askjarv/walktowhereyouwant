@@ -6,7 +6,8 @@
     "menuColor": "#00ff9f",
     "menuBackground": "#1a1a3a",
     "textColor": "#ffffff",
-    "fontFamily": "'Orbitron', sans-serif"
+    "fontFamily": "'Orbitron', sans-serif",
+    "dailystepgoal": 10000
   },
   "milestones": [
     {

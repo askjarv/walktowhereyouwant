@@ -15,11 +15,10 @@
     <div id="steps-container" class="glass-effect">
         <h1>Your Steps Today</h1>
         <div id="step-gauge-container"></div>
-        <div id="milestone-container" class="glass-effect">
-            <!-- Milestone content will be dynamically inserted here -->
-        </div>
     </div>
-
+    <div id="milestone-container" class="glass-effect">
+        <!-- Milestone content will be dynamically inserted here -->
+    </div>
     <div id="steps-history" class="glass-effect">
         <h2>Step History</h2>
         <div id="history-content">
@@ -43,6 +42,40 @@
                     <button id="apply-date-filter" class="primary-button">Apply</button>
                     <button id="reset-date-filter" class="secondary-button">Reset</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="theme-settings">
+        <button id="theme-settings-btn">Theme Settings</button>
+        <button id="theme-instructions-btn">Theme Instructions</button>
+    </div>
+
+    <!-- Theme Settings Modal -->
+    <div id="theme-settings" class="modal">
+        // ... existing code ...
+    </div>
+
+    <!-- Theme Instructions Modal -->
+    <div id="theme-instructions" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="instructions-content">
+                <h2>How to Create a Custom Theme</h2>
+                <p>Follow these steps to create your own custom theme:</p>
+                <ol>
+                    <li>Download the theme template by clicking the button below</li>
+                    <li>Edit the template file with your desired settings:
+                        <ul>
+                            <li>Set your theme name</li>
+                            <li>Configure global theme colors (background, menu, text)</li>
+                            <li>Add your milestone images and text</li>
+                        </ul>
+                    </li>
+                    <li>Save your theme file</li>
+                    <li>Upload your theme file using the Theme Settings</li>
+                </ol>
+                <button id="download-template">Download Template</button>
             </div>
         </div>
     </div>
