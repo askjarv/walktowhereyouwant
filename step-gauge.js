@@ -9,8 +9,8 @@ class StepGauge {
     initialize() {
         // Create canvas element
         this.canvas = document.createElement('canvas');
-        this.canvas.width = 300;
-        this.canvas.height = 300;
+        this.canvas.width = 400;
+        this.canvas.height = 400;
         this.container.appendChild(this.canvas);
         
         // Get context
@@ -26,7 +26,7 @@ class StepGauge {
         const height = this.canvas.height;
         const centerX = width / 2;
         const centerY = height / 2;
-        const radius = Math.min(width, height) * 0.4;
+        const radius = Math.min(width, height) * 0.35;
         
         // Clear canvas
         ctx.clearRect(0, 0, width, height);
@@ -35,7 +35,7 @@ class StepGauge {
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, Math.PI, 0);
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.lineWidth = 20;
+        ctx.lineWidth = 30;
         ctx.stroke();
         
         // Calculate progress
@@ -46,23 +46,23 @@ class StepGauge {
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, Math.PI, angle);
         ctx.strokeStyle = `hsl(${120 * progress}, 70%, 50%)`;
-        ctx.lineWidth = 20;
+        ctx.lineWidth = 30;
         ctx.stroke();
         
         // Draw steps text
         ctx.fillStyle = 'var(--text-color)';
-        ctx.font = 'bold 24px var(--font-family)';
+        ctx.font = 'bold 36px var(--font-family)';
         ctx.textAlign = 'center';
-        ctx.fillText(steps.toLocaleString(), centerX, centerY + 10);
+        ctx.fillText(steps.toLocaleString(), centerX, centerY + 15);
         
         // Draw goal text
-        ctx.font = '16px var(--font-family)';
-        ctx.fillText(`Goal: ${goal.toLocaleString()}`, centerX, centerY + 40);
+        ctx.font = '24px var(--font-family)';
+        ctx.fillText(`Goal: ${goal.toLocaleString()}`, centerX, centerY + 60);
         
         // Draw percentage
         const percentage = Math.round(progress * 100);
-        ctx.font = '20px var(--font-family)';
-        ctx.fillText(`${percentage}%`, centerX, centerY - 20);
+        ctx.font = '28px var(--font-family)';
+        ctx.fillText(`${percentage}%`, centerX, centerY - 30);
     }
 
     update(steps, goal) {

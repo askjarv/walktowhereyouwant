@@ -22,8 +22,8 @@ body {
 
 .glass-effect {
     background: rgba(var(--menu-background-rgb), 0.7);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
@@ -256,8 +256,8 @@ h2 {
     width: 80%;
     height: 80%;
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -271,8 +271,8 @@ h2 {
     width: 500px;
     max-height: 90vh;
     overflow-y: auto;
-    backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 .modal-header {
@@ -397,8 +397,8 @@ h2 {
     padding: 2rem;
     border-radius: 1rem;
     background: rgba(var(--menu-background-rgb), 0.7);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
@@ -414,8 +414,8 @@ h2 {
     padding: 2rem;
     border-radius: 1rem;
     background: rgba(var(--menu-background-rgb), 0.7);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
     display: none;
@@ -436,8 +436,8 @@ h2 {
     padding: 2rem;
     border-radius: 1rem;
     background: rgba(var(--menu-background-rgb), 0.7);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
@@ -630,14 +630,32 @@ h2 {
     width: 100%;
     max-width: 600px;
     height: 400px;
-    margin: 0 auto;
+    margin: 2rem auto;
     position: relative;
+    background: rgba(var(--menu-background-rgb), 0.1);
+    border-radius: 1rem;
+    padding: 1rem;
 }
 
 #step-gauge-container canvas {
     width: 100%;
     height: 100%;
     display: block;
+}
+
+.widget-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#steps-count {
+    font-size: 4rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: var(--menu-color);
+    text-align: center;
 }
 
 /* Theme Instructions Modal */
@@ -1025,8 +1043,8 @@ h2 {
     height: 50px;
     border-radius: 50%;
     background: rgba(var(--menu-background-rgb), 0.7);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.15);
     display: flex;

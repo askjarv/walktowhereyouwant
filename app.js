@@ -158,8 +158,10 @@ class FitbitApp {
         container.innerHTML = '';
         
         // Create new gauge
-        const gauge = new StepGauge(container);
-        this.stepGauge = gauge;
+        this.stepGauge = new StepGauge('step-gauge-container');
+        
+        // Set initial value
+        this.stepGauge.update(0, this.dailyGoal);
     }
 
     redirectToFitbitAuth() {
