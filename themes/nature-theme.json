@@ -1,0 +1,42 @@
+{
+    "name": "Nature Theme",
+    "globalTheme": {
+        "backgroundColor": "#e8f5e9",
+        "menuColor": "#2e7d32",
+        "menuBackground": "#c8e6c9",
+        "textColor": "#1b5e20",
+        "fontFamily": "'Open Sans', sans-serif"
+    },
+    "milestones": [
+        {
+            "steps": 1000,
+            "imageUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500",
+            "text": "A small forest path",
+            "backgroundColor": "#a5d6a7"
+        },
+        {
+            "steps": 5000,
+            "imageUrl": "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=500",
+            "text": "A peaceful meadow",
+            "backgroundColor": "#81c784"
+        },
+        {
+            "steps": 10000,
+            "imageUrl": "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=500",
+            "text": "A majestic mountain",
+            "backgroundColor": "#66bb6a"
+        },
+        {
+            "steps": 15000,
+            "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=500",
+            "text": "A serene valley",
+            "backgroundColor": "#4caf50"
+        },
+        {
+            "steps": 20000,
+            "imageUrl": "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500",
+            "text": "An ancient forest",
+            "backgroundColor": "#43a047"
+        }
+    ]
+} 
