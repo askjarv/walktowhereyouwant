@@ -122,6 +122,8 @@ class FitbitApp {
                 localStorage.setItem('fitbit_access_token', accessToken);
                 // Remove the hash from the URL
                 window.history.replaceState({}, document.title, window.location.pathname);
+                // Hide welcome modal if it's showing
+                this.welcomeModal.hide();
             }
         }
 
@@ -134,6 +136,8 @@ class FitbitApp {
             console.log('Token found, fetching data...');
             this.fetchTodaySteps();
             this.fetchStepsHistory();
+            // Ensure welcome modal is hidden
+            this.welcomeModal.hide();
         } else {
             console.log('No token found');
         }

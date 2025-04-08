@@ -7,6 +7,9 @@ class WelcomeModal {
         const accessToken = localStorage.getItem('fitbit_access_token');
         if (!accessToken) {
             this.show();
+        } else {
+            // Ensure modal is hidden if token exists
+            this.hide();
         }
     }
 
