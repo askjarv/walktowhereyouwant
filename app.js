@@ -15,21 +15,24 @@ let accessToken = localStorage.getItem('fitbit_access_token');
 
 class FitbitApp {
     constructor() {
+        this.accessToken = localStorage.getItem('fitbit_access_token');
         this.themeManager = new ThemeManager();
         this.stepsTracker = new StepsTracker();
         this.welcomeModal = new WelcomeModal();
         this.settingsModal = new SettingsModal();
         this.stepGauge = new StepGauge('step-gauge-container');
-        this.accessToken = localStorage.getItem('fitbit_access_token');
         this.dailyGoal = 10000; // Default daily goal
-        this.initializeUI();
-        this.initializeEventListeners();
-        this.initialize();
-        this.initializeSettings();
         this.connectionStatus = document.getElementById('connection-status');
         this.disconnectButton = document.getElementById('disconnect-fitbit');
         
         this.disconnectButton.addEventListener('click', () => this.disconnectFitbit());
+        
+        // Initialize UI elements after DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.initialize());
+        } else {
+            this.initialize();
+        }
     }
 
     initializeUI() {
@@ -102,37 +105,15 @@ class FitbitApp {
         }
     }
 
-    async initialize() {
-        // Check URL hash for access token (Implicit Grant Flow)
-        const hash = window.location.hash;
-        if (hash) {
-            const params = new URLSearchParams(hash.substring(1));
-            const accessToken = params.get('access_token');
-            if (accessToken) {
-                this.accessToken = accessToken;
-                localStorage.setItem('fitbit_access_token', accessToken);
-                // Remove the hash from the URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        }
-
-        // Check if we have a token
+    initialize() {
+        this.initializeUI();
+        this.initializeEventListeners();
+        this.initializeSettings();
+        this.updateConnectionStatus(!!this.accessToken);
+        
         if (this.accessToken) {
-            try {
-                // Verify token is still valid and fetch today's steps
-                await this.fetchTodaySteps();
-                // Fetch step history
-                await this.fetchStepsHistory();
-            } catch (error) {
-                console.error('Error verifying token:', error);
-                // Token might be expired, clear it
-                localStorage.removeItem('fitbit_access_token');
-                this.accessToken = null;
-                this.welcomeModal.show();
-            }
-        } else {
-            // Show welcome modal if not authenticated
-            this.welcomeModal.show();
+            this.fetchTodaySteps();
+            this.fetchStepsHistory();
         }
     }
 
@@ -272,12 +253,17 @@ class FitbitApp {
     initializeSettings() {
         const settingsBtn = document.getElementById('settings-btn');
         const settingsModal = document.getElementById('settings-modal');
-        const closeSettingsBtn = document.getElementById('close-settings');
+        const closeSettingsBtn = document.querySelector('.close-modal');
         const disconnectBtn = document.getElementById('disconnect-fitbit');
+
+        if (!settingsBtn || !settingsModal || !closeSettingsBtn || !disconnectBtn) {
+            console.warn('Some settings elements not found in the DOM');
+            return;
+        }
 
         settingsBtn.addEventListener('click', () => {
             settingsModal.style.display = 'block';
-            this.updateConnectionStatus(true);
+            this.updateConnectionStatus(!!this.accessToken);
         });
 
         closeSettingsBtn.addEventListener('click', () => {
@@ -285,7 +271,7 @@ class FitbitApp {
         });
 
         disconnectBtn.addEventListener('click', () => {
-            this.logout();
+            this.disconnectFitbit();
         });
 
         window.addEventListener('click', (event) => {
@@ -296,9 +282,22 @@ class FitbitApp {
     }
 
     updateConnectionStatus(isConnected) {
-        this.connectionStatus.textContent = isConnected ? 'Connected' : 'Not Connected';
-        this.connectionStatus.style.color = isConnected ? '#4CAF50' : '#dc3545';
-        this.disconnectButton.style.display = isConnected ? 'block' : 'none';
+        const connectionStatus = document.getElementById('connection-status');
+        const disconnectButton = document.getElementById('disconnect-fitbit');
+        const loginButton = document.getElementById('login-button');
+
+        if (connectionStatus) {
+            connectionStatus.textContent = isConnected ? 'Connected' : 'Not Connected';
+            connectionStatus.style.color = isConnected ? '#4CAF50' : '#dc3545';
+        }
+
+        if (disconnectButton) {
+            disconnectButton.style.display = isConnected ? 'block' : 'none';
+        }
+
+        if (loginButton) {
+            loginButton.style.display = isConnected ? 'none' : 'block';
+        }
     }
 
     logout() {

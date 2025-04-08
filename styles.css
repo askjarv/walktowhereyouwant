@@ -1020,4 +1020,36 @@ h2 {
 
 .danger-button:active {
     background-color: #bd2130;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--menu-background);
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.settings-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#login-button {
+    display: none; /* Hidden by default, shown when not connected */
 } 
