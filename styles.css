@@ -357,10 +357,26 @@ h2 {
 }
 
 .theme-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
-    margin: 1rem 0;
+    margin-bottom: 1.5rem;
+}
+
+.theme-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--menu-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: center;
+}
+
+.theme-button:hover {
+    background-color: var(--menu-background);
 }
 
 .upload-button {

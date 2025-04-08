@@ -126,14 +126,6 @@ class ThemeManager {
                 });
             }
         }, 100);
-
-        // Add theme instructions button
-        const themeInstructionsBtn = document.createElement('button');
-        themeInstructionsBtn.textContent = 'Theme Instructions';
-        themeInstructionsBtn.className = 'theme-instructions-btn';
-        document.querySelector('.settings-container').appendChild(themeInstructionsBtn);
-
-        themeInstructionsBtn.addEventListener('click', () => this.showThemeInstructions());
     }
 
     async loadThemeFromFile(file) {
