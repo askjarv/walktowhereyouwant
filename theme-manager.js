@@ -9,6 +9,7 @@ class ThemeManager {
             fontFamily: 'Arial, sans-serif'
         };
         this.loadSavedTheme();
+        this.initializeWidgets();
         this.initializeThemeSettings();
         this.initializeThemeInstructions();
     }
@@ -24,6 +25,52 @@ class ThemeManager {
 
     saveThemeToStorage(themeName) {
         localStorage.setItem('currentTheme', themeName);
+    }
+
+    initializeWidgets() {
+        // Initialize minimize buttons
+        document.querySelectorAll('.minimize-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const widget = e.target.closest('.widget');
+                widget.classList.toggle('minimized');
+                e.target.textContent = widget.classList.contains('minimized') ? '+' : '−';
+            });
+        });
+
+        // Initialize milestone slider
+        const track = document.querySelector('.milestone-track');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        if (track && prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                track.scrollBy({ left: -track.offsetWidth, behavior: 'smooth' });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                track.scrollBy({ left: track.offsetWidth, behavior: 'smooth' });
+            });
+
+            // Add touch swipe support
+            let startX;
+            let scrollLeft;
+
+            track.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].pageX - track.offsetLeft;
+                scrollLeft = track.scrollLeft;
+            });
+
+            track.addEventListener('touchmove', (e) => {
+                if (!startX) return;
+                const x = e.touches[0].pageX - track.offsetLeft;
+                const walk = (x - startX) * 2;
+                track.scrollLeft = scrollLeft - walk;
+            });
+
+            track.addEventListener('touchend', () => {
+                startX = null;
+            });
+        }
     }
 
     initializeThemeSettings() {
@@ -205,10 +252,17 @@ class ThemeManager {
     applyMilestoneStyles(container, milestone) {
         if (!container || !milestone) return;
         
+        const track = container.querySelector('.milestone-track');
+        if (!track) return;
+
         // Clear previous content
-        container.innerHTML = '';
+        track.innerHTML = '';
         
-        // Create and append milestone content
+        // Create milestone card
+        const card = document.createElement('div');
+        card.className = 'milestone-card';
+        card.style.backgroundColor = milestone.backgroundColor || 'transparent';
+        
         const img = document.createElement('img');
         img.src = milestone.imageUrl;
         img.alt = milestone.text;
@@ -216,13 +270,9 @@ class ThemeManager {
         const text = document.createElement('p');
         text.textContent = milestone.text;
         
-        container.appendChild(img);
-        container.appendChild(text);
-        
-        // Apply milestone-specific background color if provided
-        if (milestone.backgroundColor) {
-            container.style.backgroundColor = milestone.backgroundColor;
-        }
+        card.appendChild(img);
+        card.appendChild(text);
+        track.appendChild(card);
     }
 
     showThemeInstructions() {

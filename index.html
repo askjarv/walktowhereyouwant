@@ -12,87 +12,109 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="steps-container" class="glass-effect">
-        <h1>Your Steps Today</h1>
-        <div id="step-gauge-container"></div>
-    </div>
-    <div id="milestone-container" class="glass-effect">
-        <!-- Milestone content will be dynamically inserted here -->
-    </div>
-
-    <div id="theme-settings" class="theme-settings">
-        <button id="theme-settings-btn">Theme Settings</button>
-        <button id="theme-instructions-btn">Theme Instructions</button>
-    </div>
-
-    <div id="steps-history" class="glass-effect">
-        <h2>Step History</h2>
-        <div id="history-content">
-            <!-- History items will be dynamically inserted here -->
+    <div id="steps-container" class="widget glass-effect">
+        <div class="widget-header">
+            <h2>Your Steps Today</h2>
+            <button class="minimize-btn">&minus;</button>
+        </div>
+        <div class="widget-content">
+            <div id="step-gauge-container"></div>
         </div>
     </div>
 
-    <!-- Date Filter Modal -->
-    <div id="date-filter-modal" class="modal">
+    <div id="milestone-container" class="widget glass-effect">
+        <div class="widget-header">
+            <h2>Achievements</h2>
+            <button class="minimize-btn">&minus;</button>
+        </div>
+        <div class="widget-content">
+            <div class="milestone-slider">
+                <button class="nav-btn prev-btn">&lt;</button>
+                <div class="milestone-track">
+                    <!-- Milestone content will be dynamically inserted here -->
+                </div>
+                <button class="nav-btn next-btn">&gt;</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="steps-history" class="widget glass-effect">
+        <div class="widget-header">
+            <h2>Step History</h2>
+            <button class="minimize-btn">&minus;</button>
+        </div>
+        <div class="widget-content">
+            <div id="history-content">
+                <!-- History items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
         <div class="modal-content glass-effect">
             <div class="modal-header">
-                <h2>Set Start Date</h2>
+                <h2>Settings</h2>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="start-date">Start Date:</label>
-                    <input type="date" id="start-date">
+                <div class="settings-section">
+                    <h3>Theme Settings</h3>
+                    <div class="theme-options">
+                        <div id="theme-buttons" class="theme-buttons">
+                            <!-- Theme buttons will be dynamically inserted here -->
+                        </div>
+                        <div class="theme-option">
+                            <h4>Custom Theme</h4>
+                            <label for="theme-file">Upload theme file (JSON)</label>
+                            <input type="file" id="theme-file" accept=".json" title="Upload a custom theme JSON file">
+                            <button id="upload-theme">Upload</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="button-group">
-                    <button id="apply-date-filter" class="primary-button">Apply</button>
-                    <button id="reset-date-filter" class="secondary-button">Reset</button>
+                <div class="settings-section">
+                    <h3>Theme Instructions</h3>
+                    <div class="instructions-content">
+                        <p>Follow these steps to create your own custom theme:</p>
+                        <ol>
+                            <li>Download the theme template by clicking the button below</li>
+                            <li>Edit the template file with your desired settings:
+                                <ul>
+                                    <li>Set your theme name</li>
+                                    <li>Configure global theme colors (background, menu, text)</li>
+                                    <li>Add your milestone images and text</li>
+                                </ul>
+                            </li>
+                            <li>Save your theme file</li>
+                            <li>Upload your theme file using the Theme Settings</li>
+                        </ol>
+                        <button id="download-template">Download Template</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Date Filter</h3>
+                    <div class="form-group">
+                        <label for="start-date">Start Date:</label>
+                        <input type="date" id="start-date">
+                    </div>
+                    <div class="button-group">
+                        <button id="apply-date-filter" class="primary-button">Apply</button>
+                        <button id="reset-date-filter" class="secondary-button">Reset</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Fitbit Connection</h3>
+                    <div class="connection-status">
+                        <p>Status: <span id="connection-status">Not Connected</span></p>
+                        <button id="disconnect-fitbit" class="danger-button">Disconnect Fitbit</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Theme Settings Modal -->
-    <div id="theme-settings-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Theme Settings</h2>
-            <div class="theme-options">
-                <div id="theme-buttons" class="theme-buttons">
-                    <!-- Theme buttons will be dynamically inserted here -->
-                </div>
-                <div class="theme-option">
-                    <h3>Custom Theme</h3>
-                    <label for="theme-file">Upload theme file (JSON)</label>
-                    <input type="file" id="theme-file" accept=".json" title="Upload a custom theme JSON file">
-                    <button id="upload-theme">Upload</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Theme Instructions Modal -->
-    <div id="theme-instructions" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="instructions-content">
-                <h2>How to Create a Custom Theme</h2>
-                <p>Follow these steps to create your own custom theme:</p>
-                <ol>
-                    <li>Download the theme template by clicking the button below</li>
-                    <li>Edit the template file with your desired settings:
-                        <ul>
-                            <li>Set your theme name</li>
-                            <li>Configure global theme colors (background, menu, text)</li>
-                            <li>Add your milestone images and text</li>
-                        </ul>
-                    </li>
-                    <li>Save your theme file</li>
-                    <li>Upload your theme file using the Theme Settings</li>
-                </ol>
-                <button id="download-template">Download Template</button>
-            </div>
-        </div>
+    <div id="welcome-modal" class="modal">
+        <!-- Existing code for welcome modal -->
     </div>
 
     <script type="module" src="config.js"></script>

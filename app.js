@@ -25,6 +25,11 @@ class FitbitApp {
         this.initializeUI();
         this.initializeEventListeners();
         this.initialize();
+        this.initializeSettings();
+        this.connectionStatus = document.getElementById('connection-status');
+        this.disconnectButton = document.getElementById('disconnect-fitbit');
+        
+        this.disconnectButton.addEventListener('click', () => this.disconnectFitbit());
     }
 
     initializeUI() {
@@ -262,6 +267,54 @@ class FitbitApp {
         errorDiv.textContent = message;
         document.querySelector('.container').appendChild(errorDiv);
         setTimeout(() => errorDiv.remove(), 5000);
+    }
+
+    initializeSettings() {
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettingsBtn = document.getElementById('close-settings');
+        const disconnectBtn = document.getElementById('disconnect-fitbit');
+
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.style.display = 'block';
+            this.updateConnectionStatus(true);
+        });
+
+        closeSettingsBtn.addEventListener('click', () => {
+            settingsModal.style.display = 'none';
+        });
+
+        disconnectBtn.addEventListener('click', () => {
+            this.logout();
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+        });
+    }
+
+    updateConnectionStatus(isConnected) {
+        this.connectionStatus.textContent = isConnected ? 'Connected' : 'Not Connected';
+        this.connectionStatus.style.color = isConnected ? '#4CAF50' : '#dc3545';
+        this.disconnectButton.style.display = isConnected ? 'block' : 'none';
+    }
+
+    logout() {
+        localStorage.removeItem('fitbit_access_token');
+        this.accessToken = null;
+        this.updateConnectionStatus(false);
+        document.getElementById('settings-modal').style.display = 'none';
+        this.welcomeModal.show();
+    }
+
+    disconnectFitbit() {
+        localStorage.removeItem('fitbit_access_token');
+        this.accessToken = null;
+        this.updateConnectionStatus(false);
+        document.getElementById('settings-modal').style.display = 'none';
+        this.welcomeModal.show();
     }
 }
 
