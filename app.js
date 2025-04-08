@@ -112,35 +112,54 @@ class FitbitApp {
     }
 
     initialize() {
-        // Check URL hash for access token (Implicit Grant Flow)
-        const hash = window.location.hash;
-        if (hash) {
-            const params = new URLSearchParams(hash.substring(1));
-            const accessToken = params.get('access_token');
-            if (accessToken) {
-                this.accessToken = accessToken;
-                localStorage.setItem('fitbit_access_token', accessToken);
-                // Remove the hash from the URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-                // Hide welcome modal if it's showing
-                this.welcomeModal.hide();
-            }
+        // Check for access token in URL hash
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        const accessToken = params.get('access_token');
+        
+        if (accessToken) {
+            localStorage.setItem('fitbit_access_token', accessToken);
+            // Remove the hash from the URL
+            window.location.hash = '';
+            this.updateConnectionStatus(true);
         }
 
-        this.initializeUI();
-        this.initializeEventListeners();
-        this.initializeSettings();
-        this.updateConnectionStatus(!!this.accessToken);
+        // Initialize minimize buttons
+        document.querySelectorAll('.minimize-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const widget = e.target.closest('.widget');
+                widget.classList.toggle('minimized');
+                e.target.textContent = widget.classList.contains('minimized') ? '+' : '−';
+            });
+        });
+
+        // Check if we have a token
+        const token = localStorage.getItem('fitbit_access_token');
+        console.log('Token found:', !!token);
         
-        if (this.accessToken) {
-            console.log('Token found, fetching data...');
+        if (token) {
+            this.updateConnectionStatus(true);
             this.fetchTodaySteps();
             this.fetchStepsHistory();
-            // Ensure welcome modal is hidden
-            this.welcomeModal.hide();
         } else {
+            this.updateConnectionStatus(false);
             console.log('No token found');
         }
+
+        // Initialize step gauge
+        this.initializeStepGauge();
+    }
+
+    initializeStepGauge() {
+        const container = document.getElementById('step-gauge-container');
+        if (!container) return;
+
+        // Clear any existing content
+        container.innerHTML = '';
+        
+        // Create new gauge
+        const gauge = new StepGauge(container);
+        this.stepGauge = gauge;
     }
 
     redirectToFitbitAuth() {

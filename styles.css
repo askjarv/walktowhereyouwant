@@ -627,9 +627,10 @@ h2 {
 }
 
 #step-gauge-container {
-    width: min(300px, 80vw);
-    height: min(300px, 80vw);
-    margin: 2rem auto;
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    margin: 0 auto;
     position: relative;
 }
 
@@ -847,15 +848,18 @@ h2 {
     background-color: var(--menu-background);
 }
 
+/* Widget styles */
 .widget {
-    margin: 1rem;
+    margin: 1rem auto;
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
+    width: 90%;
+    max-width: 800px;
 }
 
-.widget.minimized {
-    max-height: 60px;
+.widget.minimized .widget-content {
+    display: none;
 }
 
 .widget-header {
@@ -870,6 +874,7 @@ h2 {
 .widget-header h2 {
     margin: 0;
     font-size: 1.2rem;
+    background: none;
 }
 
 .minimize-btn {
