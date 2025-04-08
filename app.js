@@ -330,7 +330,4 @@ export default app;
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
     window.app = new FitbitApp();
-});
-
-// Initialize the app when the page loads
-init(); 
+}); 
